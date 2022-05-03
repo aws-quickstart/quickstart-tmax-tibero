@@ -4,7 +4,7 @@ USER_PARAM=$1
 
 while :
 do
-    PRIMARY="$(cmrctl show | awk '$(NF-1) == "UP(NRML)" {print $(NF-4)}')" 
+    PRIMARY="$(cmrctl show | awk '$(NF-1) == "UP(NRML)" {print $(NF-4)}')"
     TARGET="$(cmrctl show | awk '$(NF-1) == "UP(RECO)" {print $(NF-4)}')"
 
     if [ ${#PRIMARY} != 0 ] && [ ${#TARGET} != 0 ];
