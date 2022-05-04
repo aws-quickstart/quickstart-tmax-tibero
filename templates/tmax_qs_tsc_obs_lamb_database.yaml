@@ -70,7 +70,9 @@ Metadata:
       - Label:
           default: S3 Bucket Configuration
         Parameters:
-          - S3BucketName
+          - QSS3BucketName
+          - QSS3KeyPrefix
+          - QSS3BucketRegion
       - Label:
           default: Lambda Function Configuration
         Parameters:
@@ -172,8 +174,12 @@ Metadata:
         default: Redo Log Group
       RedoLogDuplicate:
         default: Redo Log Duplicate
-      S3BucketName:
-        default: Tmax S3 Bucket Name
+      QSS3BucketName:
+        default: Tmax Quick Start S3 Bucket Name
+      QSS3KeyPrefix:
+        default: Tmax Quick Start S3 Key Prefix
+      QSS3BucketRegion:
+        default: Tmax Quick Start S3 Bucket Region
       EventBusName:
         default: EventBus Name
 
@@ -602,11 +608,31 @@ Parameters:
       - Y
       - N
 
-  S3BucketName:
-    AllowedPattern: ^[0-9a-zA-Z-]+([0-9a-zA-Z-]+)*$
-    ConstraintDescription: Bucket name can include numbers, lowercase letters, uppercase
-      letters, hyphens (-).
-    Description: Name of your tmax S3 bucket (e.g., bucket-name)
+  QSS3BucketName:
+    AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$
+    ConstraintDescription: Quick Start bucket name can include numbers, lowercase
+      letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen
+      (-).
+    Default: aws-quickstart
+    Description: S3 bucket name for the Quick Start assets. This string can include
+      numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start
+      or end with a hyphen (-).
+    Type: String
+
+  QSS3KeyPrefix:
+    AllowedPattern: ^[0-9a-zA-Z-/.]*$
+    ConstraintDescription: Quick Start key prefix can include numbers, lowercase letters,
+      uppercase letters, hyphens (-), periods (.) and forward slash (/).
+    Default: quickstart-tmax-tibero/
+    Description: S3 key prefix for the Quick Start assets. Quick Start key prefix
+      can include numbers, lowercase letters, uppercase letters, hyphens (-), periods (.) and
+      forward slash (/).
+    Type: String
+
+  QSS3BucketRegion:
+    Default: 'us-west-2'
+    Description: Region where the Quick Start S3 bucket (QSS3BucketName) is
+        hosted. When using your own bucket, you must specify this value.
     Type: String
 
   EventBusName:
@@ -673,7 +699,7 @@ Resources:
               - Action:
                   - s3:GetObject
                 Resource:
-                    - !Sub arn:aws:s3:::${S3BucketName}/*
+                    - !Sub arn:aws:s3:::${QSS3BucketName}/*
                 Effect: Allow
           PolicyName: tmaxS3policy
 
@@ -834,7 +860,7 @@ Resources:
         S3AccessCreds:
           type: S3
           buckets:
-            - !Ref 'S3BucketName'
+            - !Ref 'QSS3BucketName'
           roleName: !Ref 'InstanceRole'
       AWS::CloudFormation::Init:
         config:
@@ -945,7 +971,8 @@ Resources:
                   - !Sub "export OBSERVER_IP=${ObserverIPAddress}\n"
                   - !Sub "export OBSERVER_PORT=${ObserverPort}\n"
                   - !Sub "export CHARACTER_SET=${CharacterSet}\n"
-                  - !Sub "export S3_BUCKET_NAME=${S3BucketName}\n"
+                  - !Sub "export S3_BUCKET_NAME=${QSS3BucketName}\n"
+                  - !Sub "export S3_KEY_PREFIX=${QSS3KeyPrefix}\n"
                   - !Sub "export EVENT_BUS_NAME=${EventBusName}\n"
                   - !Sub "export STANDBY_EBS_TYPE=${StandbyEBSVolumeType}\n"
                   - !Sub "export STANDBY_EBS_IOPS=${StandbyEBSVolumeIOPS}\n"
@@ -1043,7 +1070,8 @@ Resources:
               - "\n"
               - !Sub "echo -e \"\n\n${AWS::Region}\n\n\" | aws configure\n"
               - !Sub "su $USER_NAME -c 'echo -e \"\n\n${AWS::Region}\n\n\" | aws configure'\n"
-              - !Sub "aws s3 cp s3://${S3BucketName}/tibero_config/install_pkg.sh "
+              - !Sub "aws s3 cp s3://${QSS3BucketName}/${QSS3KeyPrefix}scripts/install_pkg.sh "
+#- !Sub "aws s3 cp s3://${QSS3BucketName}/scripts/install_pkg.sh "
               - "$USER_HOME/install_pkg.sh; chmod 755 $USER_HOME/install_pkg.sh; "
               - "$USER_HOME/install_pkg.sh; rm -rf $USER_HOME/install_pkg.sh\n"
               - '/opt/aws/bin/cfn-init -v '
@@ -1056,7 +1084,8 @@ Resources:
               - "export USER_PARAM=/etc/cfn/usr-param.profile; source $USER_PARAM\n"
               - "mv /etc/cfn/env.profile $INST_ENV\n"
               - "su $USER_NAME -c '"
-              - !Sub "aws s3 cp s3://${S3BucketName}/tibero_config/s3_cp_config.sh "
+              - !Sub "aws s3 cp s3://${QSS3BucketName}/${QSS3KeyPrefix}scripts/s3_cp_config.sh "
+#- !Sub "aws s3 cp s3://${QSS3BucketName}/scripts/s3_cp_config.sh "
               - "$USER_HOME/s3_cp_config.sh; chmod 755 $USER_HOME/s3_cp_config.sh; "
               - "$USER_HOME/s3_cp_config.sh primary $USER_PARAM; "
               - "rm -rf $USER_HOME/s3_cp_config.sh'\n"
@@ -1234,7 +1263,7 @@ Resources:
         S3AccessCreds:
           type: S3
           buckets:
-            - !Ref 'S3BucketName'
+            - !Ref 'QSS3BucketName'
           roleName: !Ref 'InstanceRole'
       AWS::CloudFormation::Init:
         config:
@@ -1345,7 +1374,8 @@ Resources:
                   - !Sub "export OBSERVER_IP=${ObserverIPAddress}\n"
                   - !Sub "export OBSERVER_PORT=${ObserverPort}\n"
                   - !Sub "export CHARACTER_SET=${CharacterSet}\n"
-                  - !Sub "export S3_BUCKET_NAME=${S3BucketName}\n"
+                  - !Sub "export S3_BUCKET_NAME=${QSS3BucketName}\n"
+                  - !Sub "export S3_KEY_PREFIX=${QSS3KeyPrefix}\n"
                   - !Sub "export EVENT_BUS_NAME=${EventBusName}\n"
                   - !Sub "export STANDBY_EBS_TYPE=${StandbyEBSVolumeType}\n"
                   - !Sub "export STANDBY_EBS_IOPS=${StandbyEBSVolumeIOPS}\n"
@@ -1435,7 +1465,8 @@ Resources:
               - !Sub "/${DatabaseDirectoryName}\n"
               - !Sub "echo -e \"\n\n${AWS::Region}\n\n\" | aws configure\n"
               - !Sub "su $USER_NAME -c 'echo -e \"\n\n${AWS::Region}\n\n\" | aws configure'\n"
-              - !Sub "aws s3 cp s3://${S3BucketName}/tibero_config/install_pkg.sh "
+              - !Sub "aws s3 cp s3://${QSS3BucketName}/${QSS3KeyPrefix}scripts/install_pkg.sh "
+#- !Sub "aws s3 cp s3://${QSS3BucketName}/scripts/install_pkg.sh "
               - "$USER_HOME/install_pkg.sh; chmod 755 $USER_HOME/install_pkg.sh; "
               - "$USER_HOME/install_pkg.sh; rm -rf $USER_HOME/install_pkg.sh\n"
               - '/opt/aws/bin/cfn-init -v '
@@ -1448,7 +1479,8 @@ Resources:
               - "export USER_PARAM=/etc/cfn/usr-param.profile; source $USER_PARAM\n"
               - "mv /etc/cfn/env.profile $INST_ENV\n"
               - "su $USER_NAME -c '"
-              - !Sub "aws s3 cp s3://${S3BucketName}/tibero_config/s3_cp_config.sh "
+              - !Sub "aws s3 cp s3://${QSS3BucketName}/${QSS3KeyPrefix}scripts/s3_cp_config.sh "
+#- !Sub "aws s3 cp s3://${QSS3BucketName}/scripts/s3_cp_config.sh "
               - "$USER_HOME/s3_cp_config.sh; chmod 755 $USER_HOME/s3_cp_config.sh; "
               - "$USER_HOME/s3_cp_config.sh standby $USER_PARAM; "
               - "rm -rf $USER_HOME/s3_cp_config.sh'\n"
@@ -1587,7 +1619,7 @@ Resources:
         S3AccessCreds:
           type: S3
           buckets:
-            - !Ref 'S3BucketName'
+            - !Ref 'QSS3BucketName'
           roleName: !Ref 'InstanceRole'
       AWS::CloudFormation::Init:
         config:
@@ -1699,10 +1731,23 @@ Resources:
                   - !Sub "export OBSERVER_IP=${ObserverIPAddress}\n"
                   - !Sub "export OBSERVER_PORT=${ObserverPort}\n"
                   - !Sub "export CHARACTER_SET=${CharacterSet}\n"
-                  - !Sub "export S3_BUCKET_NAME=${S3BucketName}\n"
+                  - !Sub "export S3_BUCKET_NAME=${QSS3BucketName}\n"
+                  - !Sub "export S3_KEY_PREFIX=${QSS3KeyPrefix}\n"
                   - !Sub "export EVENT_BUS_NAME=${EventBusName}\n"
                   - !Sub "export STANDBY_EBS_TYPE=${StandbyEBSVolumeType}\n"
                   - !Sub "export STANDBY_EBS_IOPS=${StandbyEBSVolumeIOPS}\n"
+                  - "export SHMALL="
+                  - !FindInMap
+                    - AWSInstanceType2Value
+                    - !Ref 'ObserverInstanceType'
+                    - shmall
+                  - "\n"
+                  - "export SHMMAX="
+                  - !FindInMap
+                    - AWSInstanceType2Value
+                    - !Ref 'ObserverInstanceType'
+                    - shmmax
+                  - "\n"
             /etc/cfn/env.profile:
               content: !Join
                 - ''
@@ -1760,7 +1805,8 @@ Resources:
               - "\n"
               - !Sub "echo -e \"\n\n${AWS::Region}\n\n\" | aws configure\n"
               - !Sub "su $USER_NAME -c 'echo -e \"\n\n${AWS::Region}\n\n\" | aws configure'\n"
-              - !Sub "aws s3 cp s3://${S3BucketName}/tibero_config/install_pkg.sh "
+#- !Sub "aws s3 cp s3://${QSS3BucketName}/${QSS3KeyPrefix}scripts/install_pkg.sh "
+              - !Sub "aws s3 cp s3://${QSS3BucketName}/scripts/install_pkg.sh "
               - "$USER_HOME/install_pkg.sh; chmod 755 $USER_HOME/install_pkg.sh; "
               - "$USER_HOME/install_pkg.sh; rm -rf $USER_HOME/install_pkg.sh\n"
               - '/opt/aws/bin/cfn-init -v '
@@ -1773,7 +1819,8 @@ Resources:
               - "export USER_PARAM=/etc/cfn/usr-param.profile; source $USER_PARAM\n"
               - "mv /etc/cfn/env.profile $INST_ENV\n"
               - "su $USER_NAME -c '"
-              - !Sub "aws s3 cp s3://${S3BucketName}/tibero_config/s3_cp_config.sh "
+              - !Sub "aws s3 cp s3://${QSS3BucketName}/${QSS3KeyPrefix}scripts/s3_cp_config.sh "
+#- !Sub "aws s3 cp s3://${QSS3BucketName}/scripts/s3_cp_config.sh "
               - "$USER_HOME/s3_cp_config.sh; chmod 755 $USER_HOME/s3_cp_config.sh; "
               - "$USER_HOME/s3_cp_config.sh observer $USER_PARAM; "
               - "rm -rf $USER_HOME/s3_cp_config.sh'\n"

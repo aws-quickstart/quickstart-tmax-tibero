@@ -1,0 +1,30 @@
+project:
+  name: quickstart-tmax-tibero
+  owner: quickstart-eng@amazon.com
+  s3_regional_buckets: true
+  regions:
+    - ap-northeast-2
+
+tests:
+  tiberoMaster:
+    parameters:
+      AvailabilityZones: $[taskcat_genaz_3]
+      RemoteAccessCIDR: 220.94.163.14/32
+      DatabaseUserID: sss
+      DatabaseUserPassword: sss
+      KeyPairName: db25
+      VPCCIDR: 10.0.0.0/16
+      PublicSubnet1CIDR: 10.0.0.0/24
+      PublicSubnet2CIDR: 10.0.2.0/24
+      PublicSubnet3CIDR: 10.0.4.0/24
+      PublicSubnetTag1: Network=Public
+      PrivateSubnet1CIDR: 10.0.1.0/24
+      PrivateSubnet2CIDR: 10.0.3.0/24
+      PrivateSubnet3CIDR: 10.0.5.0/24
+      PrivateSubnetTag1: Network=Private
+      QSS3BucketName: db25-quickstart
+      QSS3KeyPrefix: quickstart-tmax-tibero/
+      QSS3BucketRegion: 'ap-northeast-2'
+    regions:
+      - ap-northeast-2
+    template: templates/tmax_qs_tsc_obs_lamb_master.yaml
