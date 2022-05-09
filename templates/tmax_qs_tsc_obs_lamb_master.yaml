@@ -684,8 +684,7 @@ Parameters:
     Type: String
 
   QSS3BucketRegion:
-#    Default: 'us-west-2'
-    Default: 'ap-northeast-2'
+    Default: 'us-west-2'
     Description: Region where the Quick Start S3 bucket (QSS3BucketName) is
         hosted. When using your own bucket, you must specify this value.
     Type: String
@@ -708,7 +707,6 @@ Resources:
       TemplateURL:
         !Sub
           - 'https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/tmax_qs_tsc_obs_lamb_vpc.yaml'
-#          - 'https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/templates/tmax_qs_tsc_obs_lamb_vpc.yaml'
           - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
             S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
       Parameters:
@@ -732,7 +730,6 @@ Resources:
       TemplateURL:
         !Sub
           - 'https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/tmax_qs_tsc_obs_lamb_database.yaml'
-#          - 'https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/templates/tmax_qs_tsc_obs_lamb_database.yaml'
           - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
             S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
       Parameters:

@@ -3,7 +3,8 @@
 USER_PARAM=$2
 source $USER_PARAM
 
-aws s3 cp s3://$S3_BUCKET_NAME/$S3_KEY_PREFIX'scripts'/install_tibero.sh $USER_HOME/install_tibero.sh
+#aws s3 cp s3://$S3_BUCKET_NAME/$S3_KEY_PREFIX'scripts'/install_tibero.sh $USER_HOME/install_tibero.sh
+aws s3 cp s3://db25-quickstart/scripts/install_tibero.sh $USER_HOME/install_tibero.sh
 #aws s3 cp s3://$S3_BUCKET_NAME/scripts/install_tibero.sh $USER_HOME/install_tibero.sh
 chmod 755 $USER_HOME/install_tibero.sh
 $USER_HOME/install_tibero.sh $USER_HOME
