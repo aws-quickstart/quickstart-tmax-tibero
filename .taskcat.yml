@@ -2,7 +2,7 @@ project:
   name: quickstart-tmax-tibero
   owner: quickstart-eng@amazon.com
   s3_regional_buckets: true
-  template: templates/tmax_qs_tsc_obs_lamb_master.yaml
+  template: templates/tmax-entrypoint.template.yaml
 
 tests:
   deploy-tibero-1region-3az:
