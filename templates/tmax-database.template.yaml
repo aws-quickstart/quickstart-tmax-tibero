@@ -1,8 +1,7 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: AWS CloudFormation Template that deploys Tibero in TSC-Obs mode.
-
-
+Description: AWS CloudFormation Template that deploys Tibero in TSC-Obs mode. (qs-1t1mloore)
 Metadata:
+  cfn-lint: { config: { ignore_checks: [W9006, W9002, W9003, W1020] } }
   QuickStartDocumentation:
     EntrypointName: "Launch into a TMAX Database"
   AWS::CloudFormation::Interface:
@@ -17,7 +16,6 @@ Metadata:
           - PrivateSubnet2ID
           - PublicSubnet2ID
           - PrivateSubnet3ID
-          - PublicSubnet3ID
       - Label:
           default: Amazon EC2 Configuration
         Parameters:
@@ -72,7 +70,6 @@ Metadata:
         Parameters:
           - QSS3BucketName
           - QSS3KeyPrefix
-          - QSS3BucketRegion
       - Label:
           default: Lambda Function Configuration
         Parameters:
@@ -116,16 +113,12 @@ Metadata:
         default: Allowed Bastion External Access CIDR
       VPCID:
         default: VPC ID
-      PublicSubnet1CIDR:
-        default: Public Subnet 1 CIDR
       PrivateSubnet1ID:
         default: Private Subnet 1 CIDR
       PublicSubnet2ID:
         default: Public Subnet 2 CIDR
       PrivateSubnet2ID:
         default: Private Subnet 2 CIDR
-      PublicSubnet3ID:
-        default: Public Subnet 3 CIDR
       PrivateSubnet3ID:
         default: Private Subnet 3 CIDR
       PrimaryIPAddress:
@@ -178,8 +171,6 @@ Metadata:
         default: Tmax Quick Start S3 Bucket Name
       QSS3KeyPrefix:
         default: Tmax Quick Start S3 Key Prefix
-      QSS3BucketRegion:
-        default: Tmax Quick Start S3 Bucket Region
       EventBusName:
         default: EventBus Name
 
@@ -338,31 +329,28 @@ Parameters:
 
   VPCID:
     Description: CIDR block for the Amazon VPC to create for Tibero deployment
-    Type: AWS::EC2::VPC::Id
+    Type: String
 
   PublicSubnet1ID:
     Description: CIDR block for the public subnet 1 located in Availability Zone 1
-    Type: AWS::EC2::Subnet::Id
+    Type: String
 
   PrivateSubnet1ID:
     Description: CIDR block for the private subnet 1 located in Availability Zone 1
-    Type: AWS::EC2::Subnet::Id
+    Type: String
 
   PublicSubnet2ID:
     Description: CIDR block for the public subnet 2 located in Availability Zone 2
-    Type: AWS::EC2::Subnet::Id
+    Type: String
 
   PrivateSubnet2ID:
     Description: CIDR block for the private subnet 2 located in Availability Zone 2
-    Type: AWS::EC2::Subnet::Id
+    Type: String
 
-  PublicSubnet3ID:
-    Description: CIDR block for the public subnet 3 located in Availability Zone 3
-    Type: AWS::EC2::Subnet::Id
 
   PrivateSubnet3ID:
     Description: CIDR block for the private subnet 3 located in Availability Zone 3
-    Type: AWS::EC2::Subnet::Id
+    Type: String
 
   PrimaryIPAddress:
     Description: This must be a valid IP address for private subnet 1
@@ -629,12 +617,6 @@ Parameters:
       forward slash (/).
     Type: String
 
-  QSS3BucketRegion:
-    Default: 'us-west-2'
-    Description: Region where the Quick Start S3 bucket (QSS3BucketName) is
-        hosted. When using your own bucket, you must specify this value.
-    Type: String
-
   EventBusName:
     AllowedPattern: ^[0-9a-zA-Z-]+([0-9a-zA-Z-]+)*$
     ConstraintDescription: EventBus name can include numbers, lowercase letters, uppercase
@@ -665,7 +647,7 @@ Resources:
             Effect: Allow
       Path: /
       ManagedPolicyArns:
-        - "arn:aws:iam::aws:policy/AmazonSSMFullAccess"
+        - !Sub arn:${AWS::Partition}:iam::aws:policy/AmazonSSMFullAccess
       Policies:
         - PolicyDocument:
             Version: "2012-10-17"
@@ -680,11 +662,11 @@ Resources:
                   - ec2:DeleteTags
                   - events:PutEvents
                 Resource:
-                  - !Sub arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:instance/*
-                  - !Sub arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:security-group/*
-                  - !Sub arn:aws:ec2:${AWS::Region}::snapshot/*
-                  - !Sub arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:volume/*
-                  - !Sub arn:aws:events:${AWS::Region}:${AWS::AccountId}:event-bus/${EventBusName}
+                  - !Sub arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:instance/*
+                  - !Sub arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:security-group/*
+                  - !Sub arn:${AWS::Partition}:ec2:${AWS::Region}::snapshot/*
+                  - !Sub arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:volume/*
+                  - !Sub arn:${AWS::Partition}:events:${AWS::Region}:${AWS::AccountId}:event-bus/${EventBusName}
                 Effect: Allow
               - Action:
                   - ec2:DescribeVolumes
@@ -699,8 +681,8 @@ Resources:
               - Action:
                   - s3:GetObject
                 Resource:
-                    - !Sub arn:aws:s3:::${QSS3BucketName}/*
-                    - !Sub arn:aws:s3:::db25-quickstart/*
+                    - !Sub arn:${AWS::Partition}:s3:::${QSS3BucketName}/*
+                    - !Sub arn:${AWS::Partition}:s3:::db25-quickstart/*
                 Effect: Allow
           PolicyName: tmaxS3policy
 
@@ -1959,8 +1941,8 @@ Resources:
             Effect: Allow
       Path: /
       ManagedPolicyArns:
-        - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-        - "arn:aws:iam::aws:policy/AmazonEventBridgeFullAccess"
+        - !Sub arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - !Sub arn:${AWS::Partition}:iam::aws:policy/AmazonEventBridgeFullAccess
       Policies:
         - PolicyDocument:
             Version: "2012-10-17"
