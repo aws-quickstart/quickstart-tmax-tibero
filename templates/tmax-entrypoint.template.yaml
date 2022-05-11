@@ -13,7 +13,8 @@ Metadata:
       - Label:
           default: Availability Zone Configuration
         Parameters:
-         - AvailabilityZones
+          - AvailabilityZones
+          - NumberOfAZs
       - Label:
           default: Network Configuration
         Parameters:
@@ -128,6 +129,8 @@ Metadata:
         default: VPC CIDR
       AvailabilityZones:
         default: Availability Zones
+      NumberOfAZs:
+        default: Number of Availability Zones
       PublicSubnet1CIDR:
         default: Public Subnet 1 CIDR
       PrivateSubnet1CIDR:
@@ -365,6 +368,15 @@ Parameters:
   AvailabilityZones:
     Description: The Availability Zone where Tibero subnets will be created
     Type: List<AWS::EC2::AvailabilityZone::Name>
+
+  NumberOfAZs:
+    AllowedValues:
+      - '2'
+      - '3'
+      - '4'
+    Default: '3'
+    Description: Number of Availability Zones to use in the VPC. This must match your selections in the list of Availability Zones parameter.
+    Type: String
 
   PublicSubnet1CIDR:
     Description: CIDR block for the public subnet 1 located in Availability Zone 1
@@ -706,17 +718,18 @@ Resources:
     Properties:
       TemplateURL:
         !Sub
-          - 'https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/tmax_qs_tsc_obs_lamb_vpc.yaml'
+          - 'https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-aws-vpc/templates/aws-vpc.template.yaml'
           - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
             S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
       Parameters:
         AvailabilityZones: !Join
           - ','
           - !Ref 'AvailabilityZones'
-        PrivateSubnet1CIDR: !Ref 'PrivateSubnet1CIDR'
-        PrivateSubnet2CIDR: !Ref 'PrivateSubnet2CIDR'
-        PrivateSubnet3CIDR: !Ref 'PrivateSubnet3CIDR'
-        PrivateSubnetTag1: !Ref 'PrivateSubnetTag1'
+        NumberOfAZs: !Ref 'NumberOfAZs'
+        PrivateSubnet1ACIDR: !Ref 'PrivateSubnet1CIDR'
+        PrivateSubnet2ACIDR: !Ref 'PrivateSubnet2CIDR'
+        PrivateSubnet3ACIDR: !Ref 'PrivateSubnet3CIDR'
+        PrivateSubnetATag1: !Ref 'PrivateSubnetTag1'
         PublicSubnet1CIDR: !Ref 'PublicSubnet1CIDR'
         PublicSubnet2CIDR: !Ref 'PublicSubnet2CIDR'
         PublicSubnet3CIDR: !Ref 'PublicSubnet3CIDR'
@@ -729,17 +742,17 @@ Resources:
     Properties:
       TemplateURL:
         !Sub
-          - 'https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/tmax_qs_tsc_obs_lamb_database.yaml'
+          - 'https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/tmax-database.yaml'
           - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
             S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
       Parameters:
         VPCID: !GetAtt 'VPCStack.Outputs.VPCID'
         RemoteAccessCIDR: !Ref 'RemoteAccessCIDR'
-        PrivateSubnet1ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet1ID'
+        PrivateSubnet1ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet1AID'
         PublicSubnet1ID: !GetAtt 'VPCStack.Outputs.PublicSubnet1ID'
-        PrivateSubnet2ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet2ID'
+        PrivateSubnet2ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet2AID'
         PublicSubnet2ID: !GetAtt 'VPCStack.Outputs.PublicSubnet2ID'
-        PrivateSubnet3ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet3ID'
+        PrivateSubnet3ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet3AID'
         PublicSubnet3ID: !GetAtt 'VPCStack.Outputs.PublicSubnet3ID'
         KeyPairName: !Ref 'KeyPairName'
         TiberoAMIOS: !Ref 'TiberoAMIOS'
