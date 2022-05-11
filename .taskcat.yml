@@ -10,8 +10,8 @@ tests:
       AvailabilityZones: $[taskcat_genaz_3]
       QSS3BucketName: $[taskcat_autobucket]
       RemoteAccessCIDR: --overrides--
-      DatabaseUserID: --overrides--
-      DatabaseUserPassword: --overrides--
+      DatabaseUserID: $[taskcat_genpass_6A]
+      DatabaseUserPassword: P!$[taskcat_genpass_12A]
       KeyPairName: --overrides--
     regions:
       - us-west-2
