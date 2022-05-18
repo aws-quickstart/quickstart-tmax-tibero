@@ -11,7 +11,7 @@ tests:
       QSS3BucketName: $[taskcat_autobucket]
       RemoteAccessCIDR: --overrides--
       DatabaseUserID: $[taskcat_genpass_6A]
-      DatabaseUserPassword: P!$[taskcat_genpass_12A]
+      DatabaseUserPassword: P#$[taskcat_genpass_12A]
       KeyPairName: --overrides--
     regions:
       - us-west-2
