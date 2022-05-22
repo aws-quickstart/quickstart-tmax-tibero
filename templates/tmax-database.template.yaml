@@ -1931,7 +1931,9 @@ Resources:
   LambdaRole:
     Type: 'AWS::IAM::Role'
     Properties:
-      RoleName: tmaxLambdaRole
+      RoleName: !Sub
+        - tmaxLambdaRole-${StackID}
+        - StackID: !Select [ 2, !Split [ /, !Ref AWS::StackId ]]
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:
