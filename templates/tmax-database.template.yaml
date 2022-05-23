@@ -1087,7 +1087,6 @@ Resources:
               - '         --region '
               - Ref: 'AWS::Region'
               - "\n"
-
       NetworkInterfaces:
         - GroupSet:
           - !Ref PrimaryDBSecurityGroup
@@ -1812,7 +1811,6 @@ Resources:
               - '         --region '
               - Ref: 'AWS::Region'
               - "\n"
-
       NetworkInterfaces:
         - GroupSet:
           - !Ref ObserverDBSecurityGroup
@@ -1828,7 +1826,7 @@ Resources:
     CreationPolicy:
       ResourceSignal:
         Count: 1
-        Timeout: PT60M
+        Timeout: PT90M
       AutoScalingCreationPolicy:
         MinSuccessfulInstancesPercent: 100
 
