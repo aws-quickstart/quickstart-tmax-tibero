@@ -1,0 +1,39 @@
+// Add any unique troubleshooting steps here.
+== Additional Resources
+
+=== AWS Services
+==== AWS CloudFormation
+*   Documentation: https://aws.amazon.com/documentation/cloudformation/
+*   Helper scripts: https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-helper-scripts-reference.html
+
+==== Amazon EBS
+*   User guide: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AmazonEBS.html
+*   Volumetypes: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSVolumeTypes.html
+*   Optimizedinstances: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSOptimized.html
+*   AWS Command Line Interface installation on Linux https://docs.aws.amazon.com/cli/latest/userguide/installing.html#install-with-pip
+*   Amazon EC2 user guide for Linux https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/
+*   Amazon Route 53 https://aws.amazon.com/documentation/route53/
+*   Amazon S3 https://aws.amazon.com/documentation/s3/
+*   Amazon VPC https://aws.amazon.com/documentation/vpc/
+
+=== Red Hat Enterprise Linux documentation
+
+=== Tibero Database documentation
+
+*   Tibero Database Installation Guide: https://technet.tmaxsoft.com/ko/front/download/findDownloadList.do?cmProductCode=0301
+
+==== Tibero on AWS
+*   https://aws.amazon.com/marketplace/pp/prodview-bpnsx6y2wqyhq?sr=0-1&ref_=beagle&applicationId=AWSMPContessa
+*   https://aws.amazon.com/marketplace/pp/prodview-oqp2jrkq622mg?sr=0-4&ref_=beagle&applicationId=AWSMPContessa
+*   https://aws.amazon.com/marketplace/pp/prodview-sxyqek4rcmbzm?sr=0-2&ref_=beagle&applicationId=AWSMPContessa
+*   https://aws.amazon.com/marketplace/pp/prodview-qck3d4udqa2zm?sr=0-3&ref_=beagle&applicationId=AWSMPContessa
+
+==== Tibero support notes
+*   You can visit the following Technet website and leave an inquiry to get the answer from Tibero technical support engineers.
+https://technet.tmaxsoft.com/en/front/support/qna/findQnaList.do?cmProductCode=0301
+
+
+For troubleshooting common Quick Start issues, refer to the https://fwd.aws/rA69w?[AWS Quick Start General Information Guide^] and https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/troubleshooting.html[Troubleshooting CloudFormation^].
+
+// == Resources
+// Uncomment section and add links to any external resources that are specified by the partner.
