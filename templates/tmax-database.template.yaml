@@ -1,7 +1,7 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: AWS CloudFormation Template that deploys Tibero in TSC-Obs mode. (qs-1t1mloore)
 Metadata:
-  cfn-lint: { config: { ignore_checks: [W9006, W9002, W9003, W1020] } }
+  cfn-lint: { config: { ignore_checks: [W9006, W9002, W9003, W1020, W4002] } }
   QuickStartDocumentation:
     EntrypointName: "Launch into a TMAX Database"
   AWS::CloudFormation::Interface:
@@ -70,6 +70,7 @@ Metadata:
         Parameters:
           - QSS3BucketName
           - QSS3KeyPrefix
+          #- QSS3BucketRegion
       - Label:
           default: Lambda Function Configuration
         Parameters:
@@ -171,6 +172,8 @@ Metadata:
         default: Tmax Quick Start S3 Bucket Name
       QSS3KeyPrefix:
         default: Tmax Quick Start S3 Key Prefix
+      #QSS3BucketRegion:
+       # default: Tmax Quick Start S3 Bucket Region
       EventBusName:
         default: EventBus Name
 
@@ -617,6 +620,12 @@ Parameters:
       forward slash (/).
     Type: String
 
+  #QSS3BucketRegion:
+   # Default: 'us-west-2'
+  #  Description: Region where the Quick Start S3 bucket (QSS3BucketName) is
+  #    hosted. When using your own bucket, you must specify this value.
+  #  Type: String
+
   EventBusName:
     AllowedPattern: ^[0-9a-zA-Z-]+([0-9a-zA-Z-]+)*$
     ConstraintDescription: EventBus name can include numbers, lowercase letters, uppercase
@@ -625,6 +634,8 @@ Parameters:
     Type: String
     Default: 'tmaxEventBus'
 
+Conditions:
+  UsingDefaultBucket: !Equals [!Ref QSS3BucketName, 'aws-quickstart']
 
 Resources:
 
@@ -634,6 +645,14 @@ Resources:
 
   InstanceRole:
     Type: AWS::IAM::Role
+    Metadata:
+      cfn-lint:
+        config:
+          ignore_checks:
+            - EIAMPolicyWildcardResourced
+          ignore_reasons:
+            EIAMPolicyWildcardResource: Resource '*' at is by design.
+      Properties:
     Properties:
       RoleName: !Sub
         - tmaxInstanceRole-${StackID}
@@ -845,7 +864,7 @@ Resources:
         S3AccessCreds:
           type: S3
           buckets:
-            - !Ref 'QSS3BucketName'
+            - !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
           roleName: !Ref 'InstanceRole'
       AWS::CloudFormation::Init:
         config:
@@ -1055,7 +1074,12 @@ Resources:
               - "\n"
               - !Sub "echo -e \"\n\n${AWS::Region}\n\n\" | aws configure\n"
               - !Sub "su $USER_NAME -c 'echo -e \"\n\n${AWS::Region}\n\n\" | aws configure'\n"
-              - !Sub "aws s3 cp s3://${QSS3BucketName}/${QSS3KeyPrefix}scripts/install_pkg.sh "
+              - !Sub
+                  - aws s3 cp s3://${S3Bucket}/${QSS3KeyPrefix}scripts/install_pkg.sh
+                  - S3Bucket: !If
+                      - UsingDefaultBucket
+                      - !Sub 'aws-quickstart-${AWS::Region}'
+                      - !Ref 'QSS3BucketName'
               - "$USER_HOME/install_pkg.sh; chmod 755 $USER_HOME/install_pkg.sh; "
               - "$USER_HOME/install_pkg.sh; rm -rf $USER_HOME/install_pkg.sh\n"
               - '/opt/aws/bin/cfn-init -v '
@@ -1068,7 +1092,12 @@ Resources:
               - "export USER_PARAM=/etc/cfn/usr-param.profile; source $USER_PARAM\n"
               - "mv /etc/cfn/env.profile $INST_ENV\n"
               - "su $USER_NAME -c '"
-              - !Sub "aws s3 cp s3://${QSS3BucketName}/${QSS3KeyPrefix}scripts/s3_cp_config.sh "
+              - !Sub
+                  - aws s3 cp s3://${S3Bucket}/${QSS3KeyPrefix}scripts/s3_cp_config.sh
+                  - S3Bucket: !If
+                      - UsingDefaultBucket
+                      - !Sub 'aws-quickstart-${AWS::Region}'
+                      - !Ref 'QSS3BucketName'
               - "$USER_HOME/s3_cp_config.sh; chmod 755 $USER_HOME/s3_cp_config.sh; "
               - "$USER_HOME/s3_cp_config.sh primary $USER_PARAM; "
               - "rm -rf $USER_HOME/s3_cp_config.sh'\n"
@@ -1245,7 +1274,7 @@ Resources:
         S3AccessCreds:
           type: S3
           buckets:
-            - !Ref 'QSS3BucketName'
+            - !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
           roleName: !Ref 'InstanceRole'
       AWS::CloudFormation::Init:
         config:
@@ -1447,7 +1476,12 @@ Resources:
               - !Sub "/${DatabaseDirectoryName}\n"
               - !Sub "echo -e \"\n\n${AWS::Region}\n\n\" | aws configure\n"
               - !Sub "su $USER_NAME -c 'echo -e \"\n\n${AWS::Region}\n\n\" | aws configure'\n"
-              - !Sub "aws s3 cp s3://${QSS3BucketName}/${QSS3KeyPrefix}scripts/install_pkg.sh "
+              - !Sub
+                  - aws s3 cp s3://${S3Bucket}/${QSS3KeyPrefix}scripts/install_pkg.sh
+                  - S3Bucket: !If
+                      - UsingDefaultBucket
+                      - !Sub 'aws-quickstart-${AWS::Region}'
+                      - !Ref 'QSS3BucketName'
               - "$USER_HOME/install_pkg.sh; chmod 755 $USER_HOME/install_pkg.sh; "
               - "$USER_HOME/install_pkg.sh; rm -rf $USER_HOME/install_pkg.sh\n"
               - '/opt/aws/bin/cfn-init -v '
@@ -1460,7 +1494,12 @@ Resources:
               - "export USER_PARAM=/etc/cfn/usr-param.profile; source $USER_PARAM\n"
               - "mv /etc/cfn/env.profile $INST_ENV\n"
               - "su $USER_NAME -c '"
-              - !Sub "aws s3 cp s3://${QSS3BucketName}/${QSS3KeyPrefix}scripts/s3_cp_config.sh "
+              - !Sub
+                  - aws s3 cp s3://${S3Bucket}/${QSS3KeyPrefix}scripts/s3_cp_config.sh
+                  - S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub 'aws-quickstart-${AWS::Region}'
+                    - !Ref 'QSS3BucketName'
               - "$USER_HOME/s3_cp_config.sh; chmod 755 $USER_HOME/s3_cp_config.sh; "
               - "$USER_HOME/s3_cp_config.sh standby $USER_PARAM; "
               - "rm -rf $USER_HOME/s3_cp_config.sh'\n"
@@ -1599,7 +1638,7 @@ Resources:
         S3AccessCreds:
           type: S3
           buckets:
-            - !Ref 'QSS3BucketName'
+            - !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
           roleName: !Ref 'InstanceRole'
       AWS::CloudFormation::Init:
         config:
@@ -1785,7 +1824,12 @@ Resources:
               - "\n"
               - !Sub "echo -e \"\n\n${AWS::Region}\n\n\" | aws configure\n"
               - !Sub "su $USER_NAME -c 'echo -e \"\n\n${AWS::Region}\n\n\" | aws configure'\n"
-              - !Sub "aws s3 cp s3://${QSS3BucketName}/${QSS3KeyPrefix}scripts/install_pkg.sh "
+              - !Sub
+                  - aws s3 cp s3://${S3Bucket}/${QSS3KeyPrefix}scripts/install_pkg.sh
+                  - S3Bucket: !If
+                      - UsingDefaultBucket
+                      - !Sub 'aws-quickstart-${AWS::Region}'
+                      - !Ref 'QSS3BucketName'
               - "$USER_HOME/install_pkg.sh; chmod 755 $USER_HOME/install_pkg.sh; "
               - "$USER_HOME/install_pkg.sh; rm -rf $USER_HOME/install_pkg.sh\n"
               - '/opt/aws/bin/cfn-init -v '
@@ -1798,7 +1842,12 @@ Resources:
               - "export USER_PARAM=/etc/cfn/usr-param.profile; source $USER_PARAM\n"
               - "mv /etc/cfn/env.profile $INST_ENV\n"
               - "su $USER_NAME -c '"
-              - !Sub "aws s3 cp s3://${QSS3BucketName}/${QSS3KeyPrefix}scripts/s3_cp_config.sh "
+              - !Sub
+                  - aws s3 cp s3://${S3Bucket}/${QSS3KeyPrefix}scripts/s3_cp_config.sh
+                  - S3Bucket: !If
+                      - UsingDefaultBucket
+                      - !Sub 'aws-quickstart-${AWS::Region}'
+                      - !Ref 'QSS3BucketName'
               - "$USER_HOME/s3_cp_config.sh; chmod 755 $USER_HOME/s3_cp_config.sh; "
               - "$USER_HOME/s3_cp_config.sh observer $USER_PARAM; "
               - "rm -rf $USER_HOME/s3_cp_config.sh'\n"
@@ -1826,7 +1875,7 @@ Resources:
     CreationPolicy:
       ResourceSignal:
         Count: 1
-        Timeout: PT90M
+        Timeout: PT60M
       AutoScalingCreationPolicy:
         MinSuccessfulInstancesPercent: 100
 
@@ -1928,6 +1977,13 @@ Resources:
 
   LambdaRole:
     Type: 'AWS::IAM::Role'
+    Metadata:
+      cfn-lint:
+        config:
+          ignore_checks:
+            - EIAMPolicyWildcardResource
+          ignore_reasons:
+            EIAMPolicyWildcardResource: Resource '*' is by  design.
     Properties:
       RoleName: !Sub
         - tmaxLambdaRole-${StackID}

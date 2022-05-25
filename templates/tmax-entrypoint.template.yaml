@@ -717,8 +717,8 @@ Resources:
       TemplateURL:
         !Sub
           - 'https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-aws-vpc/templates/aws-vpc.template.yaml'
-          - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
-            S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
+          -  S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
+             S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
       Parameters:
         AvailabilityZones: !Join
           - ','
@@ -794,5 +794,5 @@ Resources:
         NumBastionHosts: !Ref 'NumBastionHosts'
         QSS3BucketName: !Ref 'QSS3BucketName'
         QSS3KeyPrefix: !Ref 'QSS3KeyPrefix'
-        #QSS3BucketRegion: !Ref 'QSS3BucketRegion'
+        QSS3BucketRegion: !Ref 'QSS3BucketRegion'
         EventBusName: !Ref 'EventBusName'

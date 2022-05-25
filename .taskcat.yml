@@ -9,6 +9,7 @@ tests:
     parameters:
       AvailabilityZones: $[taskcat_genaz_3]
       QSS3BucketName: $[taskcat_autobucket]
+      QSS3BucketRegion: $[taskcat_current_region]
       RemoteAccessCIDR: 10.0.0.0/16
       DatabaseUserID: $[taskcat_genpass_6A]
       DatabaseUserPassword: P#$[taskcat_genpass_12A]
