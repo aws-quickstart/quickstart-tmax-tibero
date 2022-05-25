@@ -652,7 +652,6 @@ Resources:
             - EIAMPolicyWildcardResourced
           ignore_reasons:
             EIAMPolicyWildcardResource: Resource '*' at is by design.
-      Properties:
     Properties:
       RoleName: !Sub
         - tmaxInstanceRole-${StackID}
@@ -1075,7 +1074,7 @@ Resources:
               - !Sub "echo -e \"\n\n${AWS::Region}\n\n\" | aws configure\n"
               - !Sub "su $USER_NAME -c 'echo -e \"\n\n${AWS::Region}\n\n\" | aws configure'\n"
               - !Sub
-                  - aws s3 cp s3://${S3Bucket}/${QSS3KeyPrefix}scripts/install_pkg.sh
+                  - "aws s3 cp s3://${S3Bucket}/${QSS3KeyPrefix}scripts/install_pkg.sh ."
                   - S3Bucket: !If
                       - UsingDefaultBucket
                       - !Sub 'aws-quickstart-${AWS::Region}'
@@ -1093,7 +1092,7 @@ Resources:
               - "mv /etc/cfn/env.profile $INST_ENV\n"
               - "su $USER_NAME -c '"
               - !Sub
-                  - "aws s3 cp s3://${S3Bucket}/${QSS3KeyPrefix}scripts/s3_cp_config.sh"
+                  - "aws s3 cp s3://${S3Bucket}/${QSS3KeyPrefix}scripts/s3_cp_config.sh ."
                   - S3Bucket: !If
                       - UsingDefaultBucket
                       - !Sub 'aws-quickstart-${AWS::Region}'
@@ -1477,7 +1476,7 @@ Resources:
               - !Sub "echo -e \"\n\n${AWS::Region}\n\n\" | aws configure\n"
               - !Sub "su $USER_NAME -c 'echo -e \"\n\n${AWS::Region}\n\n\" | aws configure'\n"
               - !Sub
-                  - "aws s3 cp s3://${S3Bucket}/${QSS3KeyPrefix}scripts/install_pkg.sh"
+                  - "aws s3 cp s3://${S3Bucket}/${QSS3KeyPrefix}scripts/install_pkg.sh ."
                   - S3Bucket: !If
                       - UsingDefaultBucket
                       - !Sub 'aws-quickstart-${AWS::Region}'
@@ -1495,7 +1494,7 @@ Resources:
               - "mv /etc/cfn/env.profile $INST_ENV\n"
               - "su $USER_NAME -c '"
               - !Sub
-                  - "aws s3 cp s3://${S3Bucket}/${QSS3KeyPrefix}scripts/s3_cp_config.sh"
+                  - "aws s3 cp s3://${S3Bucket}/${QSS3KeyPrefix}scripts/s3_cp_config.sh ."
                   - S3Bucket: !If
                     - UsingDefaultBucket
                     - !Sub 'aws-quickstart-${AWS::Region}'
@@ -1825,7 +1824,7 @@ Resources:
               - !Sub "echo -e \"\n\n${AWS::Region}\n\n\" | aws configure\n"
               - !Sub "su $USER_NAME -c 'echo -e \"\n\n${AWS::Region}\n\n\" | aws configure'\n"
               - !Sub
-                  - "aws s3 cp s3://${S3Bucket}/${QSS3KeyPrefix}scripts/install_pkg.sh"
+                  - "aws s3 cp s3://${S3Bucket}/${QSS3KeyPrefix}scripts/install_pkg.sh ."
                   - S3Bucket: !If
                       - UsingDefaultBucket
                       - !Sub 'aws-quickstart-${AWS::Region}'
@@ -1843,7 +1842,7 @@ Resources:
               - "mv /etc/cfn/env.profile $INST_ENV\n"
               - "su $USER_NAME -c '"
               - !Sub
-                  - "aws s3 cp s3://${S3Bucket}/${QSS3KeyPrefix}scripts/s3_cp_config.sh"
+                  - "aws s3 cp s3://${S3Bucket}/${QSS3KeyPrefix}scripts/s3_cp_config.sh ."
                   - S3Bucket: !If
                       - UsingDefaultBucket
                       - !Sub 'aws-quickstart-${AWS::Region}'
