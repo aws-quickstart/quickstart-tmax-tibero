@@ -26,4 +26,4 @@ tests:
       VPCCIDR: 10.0.0.0/16
     regions:
       - us-west-2
-      - us-east-1
+      #- us-east-1

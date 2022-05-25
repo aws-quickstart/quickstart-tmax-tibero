@@ -1,7 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: AWS CloudFormation Template that deploys Tibero in TSC-Obs mode. (qs-1t1mlooor)
-
-
 Metadata:
   cfn-lint: { config: { ignore_checks: [W9006, W9002, W9003] } }
   QuickStartDocumentation:
