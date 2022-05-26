@@ -1,8 +1,7 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: AWS CloudFormation Template that deploys Tibero in TSC-Obs mode.
-
-
+Description: AWS CloudFormation Template that deploys Tibero in TSC-Obs mode. (qs-1t1mloore)
 Metadata:
+  cfn-lint: { config: { ignore_checks: [W9006, W9002, W9003, W1020, W4002] } }
   QuickStartDocumentation:
     EntrypointName: "Launch into a TMAX Database"
   AWS::CloudFormation::Interface:
@@ -17,7 +16,6 @@ Metadata:
           - PrivateSubnet2ID
           - PublicSubnet2ID
           - PrivateSubnet3ID
-          - PublicSubnet3ID
       - Label:
           default: Amazon EC2 Configuration
         Parameters:
@@ -72,7 +70,7 @@ Metadata:
         Parameters:
           - QSS3BucketName
           - QSS3KeyPrefix
-          - QSS3BucketRegion
+          #- QSS3BucketRegion
       - Label:
           default: Lambda Function Configuration
         Parameters:
@@ -116,16 +114,12 @@ Metadata:
         default: Allowed Bastion External Access CIDR
       VPCID:
         default: VPC ID
-      PublicSubnet1CIDR:
-        default: Public Subnet 1 CIDR
       PrivateSubnet1ID:
         default: Private Subnet 1 CIDR
       PublicSubnet2ID:
         default: Public Subnet 2 CIDR
       PrivateSubnet2ID:
         default: Private Subnet 2 CIDR
-      PublicSubnet3ID:
-        default: Public Subnet 3 CIDR
       PrivateSubnet3ID:
         default: Private Subnet 3 CIDR
       PrimaryIPAddress:
@@ -178,8 +172,8 @@ Metadata:
         default: Tmax Quick Start S3 Bucket Name
       QSS3KeyPrefix:
         default: Tmax Quick Start S3 Key Prefix
-      QSS3BucketRegion:
-        default: Tmax Quick Start S3 Bucket Region
+      #QSS3BucketRegion:
+       # default: Tmax Quick Start S3 Bucket Region
       EventBusName:
         default: EventBus Name
 
@@ -338,51 +332,48 @@ Parameters:
 
   VPCID:
     Description: CIDR block for the Amazon VPC to create for Tibero deployment
-    Type: AWS::EC2::VPC::Id
+    Type: String
 
   PublicSubnet1ID:
     Description: CIDR block for the public subnet 1 located in Availability Zone 1
-    Type: AWS::EC2::Subnet::Id
+    Type: String
 
   PrivateSubnet1ID:
     Description: CIDR block for the private subnet 1 located in Availability Zone 1
-    Type: AWS::EC2::Subnet::Id
+    Type: String
 
   PublicSubnet2ID:
     Description: CIDR block for the public subnet 2 located in Availability Zone 2
-    Type: AWS::EC2::Subnet::Id
+    Type: String
 
   PrivateSubnet2ID:
     Description: CIDR block for the private subnet 2 located in Availability Zone 2
-    Type: AWS::EC2::Subnet::Id
+    Type: String
 
-  PublicSubnet3ID:
-    Description: CIDR block for the public subnet 3 located in Availability Zone 3
-    Type: AWS::EC2::Subnet::Id
 
   PrivateSubnet3ID:
     Description: CIDR block for the private subnet 3 located in Availability Zone 3
-    Type: AWS::EC2::Subnet::Id
+    Type: String
 
   PrimaryIPAddress:
     Description: This must be a valid IP address for private subnet 1
     ConstraintDescription: IP address parameter must be in the form x.x.x.x
     Type: String
-    Default: 10.0.1.5
+    Default: 10.0.0.5
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$
 
   StandbyIPAddress:
     Description: This must be a valid IP address for private subnet 2
     ConstraintDescription: IP address parameter must be in the form x.x.x.x
     Type: String
-    Default: 10.0.3.5
+    Default: 10.0.32.5
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$
 
   ObserverIPAddress:
     Description: This must be a valid IP address for private subnet 3
     ConstraintDescription: IP address parameter must be in the form x.x.x.x
     Type: String
-    Default: 10.0.5.5
+    Default: 10.0.64.5
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$
 
   BastionAMIOS:
@@ -629,11 +620,11 @@ Parameters:
       forward slash (/).
     Type: String
 
-  QSS3BucketRegion:
-    Default: 'us-west-2'
-    Description: Region where the Quick Start S3 bucket (QSS3BucketName) is
-        hosted. When using your own bucket, you must specify this value.
-    Type: String
+  #QSS3BucketRegion:
+   # Default: 'us-west-2'
+  #  Description: Region where the Quick Start S3 bucket (QSS3BucketName) is
+  #    hosted. When using your own bucket, you must specify this value.
+  #  Type: String
 
   EventBusName:
     AllowedPattern: ^[0-9a-zA-Z-]+([0-9a-zA-Z-]+)*$
@@ -643,6 +634,8 @@ Parameters:
     Type: String
     Default: 'tmaxEventBus'
 
+Conditions:
+  UsingDefaultBucket: !Equals [!Ref QSS3BucketName, 'aws-quickstart']
 
 Resources:
 
@@ -652,8 +645,17 @@ Resources:
 
   InstanceRole:
     Type: AWS::IAM::Role
+    Metadata:
+      cfn-lint:
+        config:
+          ignore_checks:
+            - EIAMPolicyWildcardResourced
+          ignore_reasons:
+            EIAMPolicyWildcardResource: Resource '*' at is by design.
     Properties:
-      RoleName: tmaxInstanceRole
+      RoleName: !Sub
+        - tmaxInstanceRole-${StackID}
+        - StackID: !Select [ 2, !Split [ /, !Ref AWS::StackId ]]
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:
@@ -665,7 +667,7 @@ Resources:
             Effect: Allow
       Path: /
       ManagedPolicyArns:
-        - "arn:aws:iam::aws:policy/AmazonSSMFullAccess"
+        - !Sub arn:${AWS::Partition}:iam::aws:policy/AmazonSSMFullAccess
       Policies:
         - PolicyDocument:
             Version: "2012-10-17"
@@ -680,11 +682,11 @@ Resources:
                   - ec2:DeleteTags
                   - events:PutEvents
                 Resource:
-                  - !Sub arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:instance/*
-                  - !Sub arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:security-group/*
-                  - !Sub arn:aws:ec2:${AWS::Region}::snapshot/*
-                  - !Sub arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:volume/*
-                  - !Sub arn:aws:events:${AWS::Region}:${AWS::AccountId}:event-bus/${EventBusName}
+                  - !Sub arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:instance/*
+                  - !Sub arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:security-group/*
+                  - !Sub arn:${AWS::Partition}:ec2:${AWS::Region}::snapshot/*
+                  - !Sub arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:volume/*
+                  - !Sub arn:${AWS::Partition}:events:${AWS::Region}:${AWS::AccountId}:event-bus/${EventBusName}
                 Effect: Allow
               - Action:
                   - ec2:DescribeVolumes
@@ -699,8 +701,8 @@ Resources:
               - Action:
                   - s3:GetObject
                 Resource:
-                    - !Sub arn:aws:s3:::${QSS3BucketName}/*
-                    - !Sub arn:aws:s3:::db25-quickstart/*
+                    - !Sub arn:${AWS::Partition}:s3:::${QSS3BucketName}/*
+                    - !Sub arn:${AWS::Partition}:s3:::db25-quickstart/*
                 Effect: Allow
           PolicyName: tmaxS3policy
 
@@ -861,7 +863,7 @@ Resources:
         S3AccessCreds:
           type: S3
           buckets:
-            - !Ref 'QSS3BucketName'
+            - !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
           roleName: !Ref 'InstanceRole'
       AWS::CloudFormation::Init:
         config:
@@ -1071,7 +1073,12 @@ Resources:
               - "\n"
               - !Sub "echo -e \"\n\n${AWS::Region}\n\n\" | aws configure\n"
               - !Sub "su $USER_NAME -c 'echo -e \"\n\n${AWS::Region}\n\n\" | aws configure'\n"
-              - !Sub "aws s3 cp s3://${QSS3BucketName}/${QSS3KeyPrefix}scripts/install_pkg.sh "
+              - !Sub
+                  - "aws s3 cp s3://${S3Bucket}/${QSS3KeyPrefix}scripts/install_pkg.sh ."
+                  - S3Bucket: !If
+                      - UsingDefaultBucket
+                      - !Sub 'aws-quickstart-${AWS::Region}'
+                      - !Ref 'QSS3BucketName'
               - "$USER_HOME/install_pkg.sh; chmod 755 $USER_HOME/install_pkg.sh; "
               - "$USER_HOME/install_pkg.sh; rm -rf $USER_HOME/install_pkg.sh\n"
               - '/opt/aws/bin/cfn-init -v '
@@ -1084,7 +1091,12 @@ Resources:
               - "export USER_PARAM=/etc/cfn/usr-param.profile; source $USER_PARAM\n"
               - "mv /etc/cfn/env.profile $INST_ENV\n"
               - "su $USER_NAME -c '"
-              - !Sub "aws s3 cp s3://${QSS3BucketName}/${QSS3KeyPrefix}scripts/s3_cp_config.sh "
+              - !Sub
+                  - "aws s3 cp s3://${S3Bucket}/${QSS3KeyPrefix}scripts/s3_cp_config.sh ."
+                  - S3Bucket: !If
+                      - UsingDefaultBucket
+                      - !Sub 'aws-quickstart-${AWS::Region}'
+                      - !Ref 'QSS3BucketName'
               - "$USER_HOME/s3_cp_config.sh; chmod 755 $USER_HOME/s3_cp_config.sh; "
               - "$USER_HOME/s3_cp_config.sh primary $USER_PARAM; "
               - "rm -rf $USER_HOME/s3_cp_config.sh'\n"
@@ -1103,7 +1115,6 @@ Resources:
               - '         --region '
               - Ref: 'AWS::Region'
               - "\n"
-
       NetworkInterfaces:
         - GroupSet:
           - !Ref PrimaryDBSecurityGroup
@@ -1262,7 +1273,7 @@ Resources:
         S3AccessCreds:
           type: S3
           buckets:
-            - !Ref 'QSS3BucketName'
+            - !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
           roleName: !Ref 'InstanceRole'
       AWS::CloudFormation::Init:
         config:
@@ -1464,7 +1475,12 @@ Resources:
               - !Sub "/${DatabaseDirectoryName}\n"
               - !Sub "echo -e \"\n\n${AWS::Region}\n\n\" | aws configure\n"
               - !Sub "su $USER_NAME -c 'echo -e \"\n\n${AWS::Region}\n\n\" | aws configure'\n"
-              - !Sub "aws s3 cp s3://${QSS3BucketName}/${QSS3KeyPrefix}scripts/install_pkg.sh "
+              - !Sub
+                  - "aws s3 cp s3://${S3Bucket}/${QSS3KeyPrefix}scripts/install_pkg.sh ."
+                  - S3Bucket: !If
+                      - UsingDefaultBucket
+                      - !Sub 'aws-quickstart-${AWS::Region}'
+                      - !Ref 'QSS3BucketName'
               - "$USER_HOME/install_pkg.sh; chmod 755 $USER_HOME/install_pkg.sh; "
               - "$USER_HOME/install_pkg.sh; rm -rf $USER_HOME/install_pkg.sh\n"
               - '/opt/aws/bin/cfn-init -v '
@@ -1477,7 +1493,12 @@ Resources:
               - "export USER_PARAM=/etc/cfn/usr-param.profile; source $USER_PARAM\n"
               - "mv /etc/cfn/env.profile $INST_ENV\n"
               - "su $USER_NAME -c '"
-              - !Sub "aws s3 cp s3://${QSS3BucketName}/${QSS3KeyPrefix}scripts/s3_cp_config.sh "
+              - !Sub
+                  - "aws s3 cp s3://${S3Bucket}/${QSS3KeyPrefix}scripts/s3_cp_config.sh ."
+                  - S3Bucket: !If
+                    - UsingDefaultBucket
+                    - !Sub 'aws-quickstart-${AWS::Region}'
+                    - !Ref 'QSS3BucketName'
               - "$USER_HOME/s3_cp_config.sh; chmod 755 $USER_HOME/s3_cp_config.sh; "
               - "$USER_HOME/s3_cp_config.sh standby $USER_PARAM; "
               - "rm -rf $USER_HOME/s3_cp_config.sh'\n"
@@ -1616,7 +1637,7 @@ Resources:
         S3AccessCreds:
           type: S3
           buckets:
-            - !Ref 'QSS3BucketName'
+            - !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
           roleName: !Ref 'InstanceRole'
       AWS::CloudFormation::Init:
         config:
@@ -1802,7 +1823,12 @@ Resources:
               - "\n"
               - !Sub "echo -e \"\n\n${AWS::Region}\n\n\" | aws configure\n"
               - !Sub "su $USER_NAME -c 'echo -e \"\n\n${AWS::Region}\n\n\" | aws configure'\n"
-              - !Sub "aws s3 cp s3://${QSS3BucketName}/${QSS3KeyPrefix}scripts/install_pkg.sh "
+              - !Sub
+                  - "aws s3 cp s3://${S3Bucket}/${QSS3KeyPrefix}scripts/install_pkg.sh ."
+                  - S3Bucket: !If
+                      - UsingDefaultBucket
+                      - !Sub 'aws-quickstart-${AWS::Region}'
+                      - !Ref 'QSS3BucketName'
               - "$USER_HOME/install_pkg.sh; chmod 755 $USER_HOME/install_pkg.sh; "
               - "$USER_HOME/install_pkg.sh; rm -rf $USER_HOME/install_pkg.sh\n"
               - '/opt/aws/bin/cfn-init -v '
@@ -1815,7 +1841,12 @@ Resources:
               - "export USER_PARAM=/etc/cfn/usr-param.profile; source $USER_PARAM\n"
               - "mv /etc/cfn/env.profile $INST_ENV\n"
               - "su $USER_NAME -c '"
-              - !Sub "aws s3 cp s3://${QSS3BucketName}/${QSS3KeyPrefix}scripts/s3_cp_config.sh "
+              - !Sub
+                  - "aws s3 cp s3://${S3Bucket}/${QSS3KeyPrefix}scripts/s3_cp_config.sh ."
+                  - S3Bucket: !If
+                      - UsingDefaultBucket
+                      - !Sub 'aws-quickstart-${AWS::Region}'
+                      - !Ref 'QSS3BucketName'
               - "$USER_HOME/s3_cp_config.sh; chmod 755 $USER_HOME/s3_cp_config.sh; "
               - "$USER_HOME/s3_cp_config.sh observer $USER_PARAM; "
               - "rm -rf $USER_HOME/s3_cp_config.sh'\n"
@@ -1828,7 +1859,6 @@ Resources:
               - '         --region '
               - Ref: 'AWS::Region'
               - "\n"
-
       NetworkInterfaces:
         - GroupSet:
           - !Ref ObserverDBSecurityGroup
@@ -1946,8 +1976,17 @@ Resources:
 
   LambdaRole:
     Type: 'AWS::IAM::Role'
+    Metadata:
+      cfn-lint:
+        config:
+          ignore_checks:
+            - EIAMPolicyWildcardResource
+          ignore_reasons:
+            EIAMPolicyWildcardResource: Resource '*' is by  design.
     Properties:
-      RoleName: tmaxLambdaRole
+      RoleName: !Sub
+        - tmaxLambdaRole-${StackID}
+        - StackID: !Select [ 2, !Split [ /, !Ref AWS::StackId ]]
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:
@@ -1959,8 +1998,8 @@ Resources:
             Effect: Allow
       Path: /
       ManagedPolicyArns:
-        - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-        - "arn:aws:iam::aws:policy/AmazonEventBridgeFullAccess"
+        - !Sub arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - !Sub arn:${AWS::Partition}:iam::aws:policy/AmazonEventBridgeFullAccess
       Policies:
         - PolicyDocument:
             Version: "2012-10-17"

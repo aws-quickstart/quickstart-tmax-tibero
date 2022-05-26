@@ -2,16 +2,28 @@ project:
   name: quickstart-tmax-tibero
   owner: quickstart-eng@amazon.com
   s3_regional_buckets: true
-  template: templates/tmax_qs_tsc_obs_lamb_master.yaml
+  template: templates/tmax-entrypoint.template.yaml
 
 tests:
   deploy-tibero-1region-3az:
     parameters:
       AvailabilityZones: $[taskcat_genaz_3]
       QSS3BucketName: $[taskcat_autobucket]
-      RemoteAccessCIDR: --overrides--
-      DatabaseUserID: --overrides--
-      DatabaseUserPassword: --overrides--
-      KeyPairName: --overrides--
+      QSS3BucketRegion: $[taskcat_current_region]
+      RemoteAccessCIDR: 10.0.0.0/16
+      DatabaseUserID: $[taskcat_genpass_6A]
+      DatabaseUserPassword: P#$[taskcat_genpass_12A]
+      KeyPairName: override
+      PrivateSubnet1CIDR: 10.0.0.0/19
+      PrivateSubnet2CIDR: 10.0.32.0/19
+      PrivateSubnet3CIDR: 10.0.64.0/19
+      PublicSubnet1CIDR: 10.0.128.0/20
+      PublicSubnet2CIDR: 10.0.144.0/20
+      PublicSubnet3CIDR: 10.0.160.0/20
+      PrimaryIPAddress: 10.0.20.5
+      StandbyIPAddress: 10.0.32.5
+      ObserverIPAddress: 10.0.64.5
+      VPCCIDR: 10.0.0.0/16
     regions:
       - us-west-2
+      - us-east-1
