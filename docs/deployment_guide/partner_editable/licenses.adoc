@@ -1,3 +1,8 @@
 // Include details about any licenses and how to sign up. Provide links as appropriate.
+There is no cost to use this Quick Start, but you will be billed for any AWS services or resources that this Quick Start deploys. For more information, refer to the https://fwd.aws/rA69w?[AWS Quick Start General Information Guide^]. The AWS CloudFormation templates for Quick Starts include configuration parameters that you can customize. Some of the settings, such as the instance type, affect the cost of deployment. For cost estimates, see the pricing pages for each AWS service you use. Prices are subject to change.
 
-There is no cost to use this Quick Start, but you will be billed for any AWS services or resources that this Quick Start deploys. For more information, refer to the https://fwd.aws/rA69w?[AWS Quick Start General Information Guide^].
+== Software licenses
+
+This deployment uses a Bring Your Own License (BYOL) model for {partner-product-short-name} Database Cloud Edition. You must already own licenses for {partner-product-short-name} Database Cloud Edition, and you must have access to {partner-company-name} Technet (https://technet.tmaxsoft.com/ko/front/main/main.do) to download the software.
+
+This Quick Start launches the Amazon Machine Image (AMI) for the Red Hat Enterprise Linux (RHEL) operating system.

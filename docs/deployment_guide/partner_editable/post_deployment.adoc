@@ -1,3 +1,130 @@
 // Include any postdeployment steps here, such as steps necessary to test that the deployment was successful. If there are no postdeployment steps, leave this file empty.
 
 == Postdeployment steps
+
+=== Files and Directories
+
+Installation files are downloaded from your S3 bucket to the user’s home directory for each instance. When a stack is created for each instance, files used for the installation are deleted. If you want to configure with default values when a stack is created, Tibero home directory, and log and data files are placed as follows.
+/home/ec2-user/tibero6 for Tibero Database
+/home/ec2-user/database for Tibero log, control file, datafile
+
+=== Access your Tibero Database Instance
+
+Primary and standby databases, and observer instances are set up in a private subnet for security purpose. Access the bastion host in the public subnet, which includes inbound and outbound rule setting when a stack is created, if you want to access the instances from outside VPC. Therefore, access the bastion host with SSH (port 22) by using user name “ec2-user” and the PEM key you defined. The bastion host must forward the PEM key by using SCP to bastion EC2 to access other primary and standby databases and observer instances.
+Then, the bastion host accesses each instance by using SSH (port22) with the PEM key and user name “ec2-user.” (ex, ssh -i "PEM key" ec2-user@ec2-52-79-43-219.ap-northeast-2.compute.amazonaws.com)
+
+== Best practices for using Tibero Database on AWS
+
+=== Working with Tibero CM (Cluster Manager)
+
+Tibero CM is a process of managing the database resources, such as Tibero and 7Network, and you can manage various resources by using Tibero CM after setting up Tibero Quick Start.
+
+==== Viewing Your CM Configuration
+
+You can run cmrctl, a set of commands for managing and controlling resources in Tibero CM, to use various functions. After setting up Tibero Quick Start, access the primary database or standby database EC2, and apply primary_env.profile or standby_env.profile by using the source command. And then, you can check the status of resources currently managed by CM.
+
+[#architecture3]
+.Viewing Your DB Server Resources that CM manages
+image::../images/Tibero-DB-resource-CM.png[Architecture]
+
+You can check the usage of various Tibero CM commands by using the cmrctl help command.
+
+[#architecture4]
+.Viewing Various Function Commands of CM
+image::../images/Tibero-Various-function-command-CM.png[Architecture]
+
+=== Working with Tibero Observer
+
+Tibero Observer is a process that manages Tibero Standby Cluster (TSC). If the primary database is abnormally shut down, Tibero Observer automatically boots a standby database in Active mode. After setting up Tibero Quick Start, you can change TSC configuration or switch over to a standby database by using Tibero Observer
+
+==== Viewing Your Observer Configuration
+
+You can check the status of TSC by running cmrctl, which is a set of commands for managing Tibero Observer. After setting up Tibero Quick Start, access Observer EC2 and apply observer_env.profile by using the source command. And then, you can check the status of Tibero Cluster managed by Observer by running the cmrctl show command.
+
+[#architecture5]
+.Viewing Tibero Clusters that Observer manages
+image::../images/Tibero-Clusters-Observermanager.png[Architecture]
+
+You can check the usage of various Tibero Observer commands by using the cmrctl help command.
+
+[#architecture6]
+.Viewing Various Function Commands of Observer
+image::../images/Tibero-Various-function-command-Observer.png[Architecture]
+
+
+==== Changing Your Observer Configuration
+You can check TSC fail-over mode and TSN information by running the cmrctl show --tscid [tscid] command. In this Quick Start, the default value of tscid is 123.
+
+[#architecture7]
+.Viewing TSC Information
+image::../images/Tibero-TSC-Information.png[Architecture]
+
+TSC fail-over mode can be either DISASTER_PLAN or PROTECTIVE mode. The DISASTER_PLAN mode enables failover of a standby database in Active mode, if either or both of the primary server CM and database are shut down. The PROTECTIVE mode enables failover when the primary database is shut down, but does not proceed with failover when CM is shut down, which is different from the DISASTER_PLAN mode.
+In this Quick Start, the default mode of TSC fail-over is DISASTER_PLAN.
+
+[#architecture8]
+.Changing TSC Fail-over Mode
+image::../images/Tibero-TSC--Failover-mode.png[Architecture]
+
+As shown in Figure F, you can change TSC failover mode by executing cmrctl set --tscid [tscid] --mode [disaster_plan] or [protective], and check the changed mode by executing cmrctl show --tscid [tscid]
+
+==== Switching to the Standby Database
+
+You can switch from the primary database to a standby database by executing cmrctl switchover --tscid [tscid].
+
+[#architecture9]
+.Switching Primary DB and Standby DB
+image::../images/Tibero-SwitchingDB(P,S).png[Architecture]
+
+=== Working with AWS Eventbridge and Lambda
+
+The Tibero Quick Start has AWS Eventbridge and Lambda functions for high availability of the database. When the primary database is shut down in an on-premise environment, Tibero Observer automatically promotes a standby database to the primary database (Active mode), but it does not reboot the previous primary database as a standby database. Therefore, a customer or DBA has to reboot the failed original primary database as a standby database. In this Quick Start, however, the shutdown original primary database can be automatically rebooted as a standby database (Recovery mode) by using AWS Eventbridge and Lambda. In addition, even after an observer process is shut down, it is automatically rebooted by the Lambda function. To sum up, AWS Eventbridge and Lambda provide the following functions in the Tibero Quick Start.
+- Automatically reboot the original primary database as a standby database (Recovery mode).
+- Automatically reboot Observer when it is shut down.
+
+When the Quick Start is completely set up, you can check that EventBus and Lambda have been created in the AWS console screen as shown in Figure H and I.
+
+[#architecture10]
+.Viewing EventBus of AWS EventBridge
+image::../images/Tibero-AWS-EventBridge.png[Architecture]
+
+[#architecture11]
+.Viewing Function of AWS Lambda
+image::../images/Tibero-AWS-Lambda.png[Architecture]
+
+==== Viewing Your Lambda Configuration
+You can check whether Lambda is currently in operation by using the crontab –l command. If the lambda_event.sh script file is listed in crontab as shown in Figure J, Lambda is operated.
+
+Figure J. Viewing Whether Lambda Is Operating or Not
+[#architecture4]
+.Viewing Various Function Commands of CM
+image::../images/Tibero-Lambda-operating.png[Architecture]
+
+==== Changing Your Lambda Configuration
+You can turn off the Lambda function by using the lambdaoff command, and turn it on by using the lambdaon command.
+
+== Security
+
+When you deploy systems on the AWS Cloud, security responsibilities are shared between you and AWS. AWS operates, manages, and controls the components from the host operating system and virtualization layer down to the physical security of the facilities in which the services operate. In turn, you assume responsibility and management of the quest operating system, other associated application software such as Tibero Database and Observer, as well as the configuration of the AWS security group. For more information about security on AWS, visit the AWS Security Center.
+
+=== Network Security
+
+This Quick Start solution deploys Tibero Database EC2 and Observer EC2 in a private subnet and can be accessed in the following ways:
+
+*   Connect to the bastion EC2 by using an SSH terminal to access the AWS VPC.
+
+=== OS Security
+
+To gain root access to EC2, you may use ec2-user or user-custom, and then sudo to root. You must keep the AWS EC2 PEM key you are using secure in your environment.
+
+=== Security Groups
+
+A security group acts as a firewall that controls the traffic for one or more instances. You can add rules to each security group that allow traffic to or from its associated instances.
+Tibero Quick Start creates the following four security groups.
+
+*   TiberoBastionSecurityGroup is applied to the bastion EC2, and allows an access from internet to VPC.
+*   PrimaryDBSecurityGroup is applied to the primary database EC2 and allows an access from bastion EC2 to SSH, and TCP communication from the standby database EC2 and Observer EC2.
+*   StandbyDBSecurityGroup is applied to standby database EC2, and allows an access from the bastion EC2 to SSH, and TCP communication from the primary database EC2 and Observer EC2.
+*   ObserverDBSecurityGroup is applied to Observer EC2, and allows an access from bastion EC2 to SSH, and TCP communication from the primary database EC2 and the standby database EC2
+Bastion EC2 accesses either of the primary database, standby database, or Observer via SSH. (Initially, the bastion EC2 does not have an AWS PEM key, and you must move your PEM key to the bastion EC2 by using SCP.)
+

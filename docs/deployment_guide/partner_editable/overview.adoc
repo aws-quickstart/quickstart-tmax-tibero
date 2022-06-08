@@ -1,4 +1,53 @@
-This Quick Start deploys {partner-product-name} on the AWS Cloud. If you are unfamiliar with AWS Quick Starts, refer to the https://fwd.aws/rA69w?[AWS Quick Start General Information Guide^].
+This Quick Start reference deployment guide provides step-by-step instructions for deploying {partner-product-name} on AWS Cloud. AWS provides a secure infrastructure to run {partner-product-name} with an enterprise class architecture, high availability, and support for small, medium, and large database. You can install {partner-product-name} in the AWS virtual computing environment and manage it from your data center. This guide is intended for database administrators, enterprise architects, system administrators, and developers who want to run their {partner-product-name} in a highly available Amazon Elastic Compute Cloud (Amazon EC2) environment, using Tibero TSC.
+
+=== Tibero Database on AWS
+
+{partner-product-short-name} is a high-performance, highly secure, highly scalable relational database management system (RDBMS) for enterprises that want to fully leverage their mission-critical data. In a world where data is at the core of everything, {partner-product-short-name} provides an enhanced view of processing, managing and securing large-scale databases. Highly compatible with Oracle, Tibero lets you leverage your on-premise software defined data center (SDDC) investment by embracing a simple licensing model similar to software as a service (SaaS) subscription pricing. 
+
+==== High Availability on AWS
+
+The AWS Cloud infrastructure is global, and is built around regions and availability zones. A region is a separate geographic area where you can place AWS instances and data. For a current map of AWS regions, see https://aws.amazon.com/about-aws/global-infrastructure/[AWS Global Infrastructure^] on the AWS website. When you launch this Quick Start, you can choose the AWS region where you would like to deploy your {partner-product-short-name} Database.
+
+Each region includes multiple availability zones, which are isolated locations with one or more discrete data centers–each with redundant power, networking and connectivity, housed in separate facilities. When you run databases on AWS, you can benefit significantly from availability zones, because they are connected to one another with fast, private, fiber-optic networking, providing automatic failover without interruption.
+
+High availability of {partner-product-short-name} Database on AWS relies on AWS availability zones. {partner-product-short-name} Standby Clustering (TSC) configuration of {partner-product-short-name} consists of Primary Instance, Standby Instance, and Observer Instance that detects Primary Failure. It is a high-availability architecture that a primary instance fails over to a standby instance in case of a primary instance failure.
+
+==== HA Scenarios with TBCM Observer on AWS
+
+{partner-product-short-name} Standby Clustering, which is a feature of {partner-product-short-name} Cloud Edition, has high availability structure of Active-Standby used for data protection and disaster recovery. Even when your disks and backup devices are damaged, you can create a system to run in another region by setting up a discrete database for each application. If an active database fails, you can resume the service by preserving consistent replications of original data for every transaction in a physically independent location. In addition, you can protect the data even in a situation where disks of the original server are damaged and cannot be recovered with the original server.
+
+The following table describes the replication process associated with Tibero Standby Clustering modes. Tibero Standby Cluster supports primary operation modes and log transmission methods as follows.
+[%header,cols="3,7a"]
+|===
+^|Primary Operation Mode ^|Description
+
+^|Protection
+|* LGWR Sync method
+* If at least one standby database fails to receive redo log, primary database will be shut down.
+
+^|Availability
+|* LGWR Sync method
+* If all standby databases fail to receive redo log, the primary database will not try to send redo log, but continue to operate.
+
+^|Performance
+|* The primary database will use any log transmission method, and continue to operate even if any standby database fails to synchronize with the primary. (Data loss can occur about 10 seconds).
+
+|===
+
+[%header,cols="3,7a"]
+|===
+^|Log Transmission Method ^|Description
+
+^|LGWR Sync (Synchronous)
+|* When the primary database records redo log to disk, it also sends the redo log to standby databases.
+
+^|LGWR Async (Asynchronous)
+|* The primary LNW directly sends redo log to standby databases.
+
+^|ARCH Async (Asynchronous)
+|* After ARCH creates an archive log when switching logs, it notifies LNW, which reads the archive log and sends it to the standby database.
+
+|===
 
 // For advanced information about the product that this Quick Start deploys, refer to the https://{quickstart-github-org}.github.io/{quickstart-project-name}/operational/index.html[Operational Guide^].
 
