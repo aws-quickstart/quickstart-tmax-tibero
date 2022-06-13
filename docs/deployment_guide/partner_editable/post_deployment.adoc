@@ -25,13 +25,13 @@ You can run cmrctl, a set of commands for managing and controlling resources in 
 
 [#architecture3]
 .Viewing Your DB Server Resources that CM manages
-image::../images/Tibero-DB-resource-CM.png[Architecture]
+image::../docs/deployment_guide/docs/deployment_guide/images/Tibero-DB-resource-CM.png[Architecture]
 
 You can check the usage of various Tibero CM commands by using the cmrctl help command.
 
 [#architecture4]
 .Viewing Various Function Commands of CM
-image::../images/Tibero-Various-function-command-CM.png[Architecture]
+image::../docs/deployment_guide/images/Tibero-Various-function-command-CM.png[Architecture]
 
 === Working with Tibero Observer
 
@@ -43,13 +43,13 @@ You can check the status of TSC by running cmrctl, which is a set of commands fo
 
 [#architecture5]
 .Viewing Tibero Clusters that Observer manages
-image::../images/Tibero-Clusters-Observermanager.png[Architecture]
+image::../docs/deployment_guide/images/Tibero-Clusters-Observermanager.png[Architecture]
 
 You can check the usage of various Tibero Observer commands by using the cmrctl help command.
 
 [#architecture6]
 .Viewing Various Function Commands of Observer
-image::../images/Tibero-Various-function-command-Observer.png[Architecture]
+image::../docs/deployment_guide/images/Tibero-Various-function-command-Observer.png[Architecture]
 
 
 ==== Changing Your Observer Configuration
@@ -57,14 +57,14 @@ You can check TSC fail-over mode and TSN information by running the cmrctl show 
 
 [#architecture7]
 .Viewing TSC Information
-image::../images/Tibero-TSC-Information.png[Architecture]
+image::../docs/deployment_guide/images/Tibero-TSC-Information.png[Architecture]
 
 TSC fail-over mode can be either DISASTER_PLAN or PROTECTIVE mode. The DISASTER_PLAN mode enables failover of a standby database in Active mode, if either or both of the primary server CM and database are shut down. The PROTECTIVE mode enables failover when the primary database is shut down, but does not proceed with failover when CM is shut down, which is different from the DISASTER_PLAN mode.
 In this Quick Start, the default mode of TSC fail-over is DISASTER_PLAN.
 
 [#architecture8]
 .Changing TSC Fail-over Mode
-image::../images/Tibero-TSC--Failover-mode.png[Architecture]
+image::../docs/deployment_guide/images/Tibero-TSC--Failover-mode.png[Architecture]
 
 As shown in Figure F, you can change TSC failover mode by executing cmrctl set --tscid [tscid] --mode [disaster_plan] or [protective], and check the changed mode by executing cmrctl show --tscid [tscid]
 
@@ -74,7 +74,7 @@ You can switch from the primary database to a standby database by executing cmrc
 
 [#architecture9]
 .Switching Primary DB and Standby DB
-image::../images/Tibero-SwitchingDB(P,S).png[Architecture]
+image::../docs/deployment_guide/images/Tibero-SwitchingDB(P,S).png[Architecture]
 
 === Working with AWS Eventbridge and Lambda
 
@@ -86,11 +86,11 @@ When the Quick Start is completely set up, you can check that EventBus and Lambd
 
 [#architecture10]
 .Viewing EventBus of AWS EventBridge
-image::../images/Tibero-AWS-EventBridge.png[Architecture]
+image::../docs/deployment_guide/images/Tibero-AWS-EventBridge.png[Architecture]
 
 [#architecture11]
 .Viewing Function of AWS Lambda
-image::../images/Tibero-AWS-Lambda.png[Architecture]
+image::../docs/deployment_guide/images/Tibero-AWS-Lambda.png[Architecture]
 
 ==== Viewing Your Lambda Configuration
 You can check whether Lambda is currently in operation by using the crontab –l command. If the lambda_event.sh script file is listed in crontab as shown in Figure J, Lambda is operated.
@@ -98,7 +98,7 @@ You can check whether Lambda is currently in operation by using the crontab –l
 Figure J. Viewing Whether Lambda Is Operating or Not
 [#architecture4]
 .Viewing Various Function Commands of CM
-image::../images/Tibero-Lambda-operating.png[Architecture]
+image::../docs/deployment_guide/images/Tibero-Lambda-operating.png[Architecture]
 
 ==== Changing Your Lambda Configuration
 You can turn off the Lambda function by using the lambdaoff command, and turn it on by using the lambdaon command.

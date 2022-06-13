@@ -88,4 +88,4 @@ You can use Linux for {partner-product-short-name} Database installation on AWS.
 {partner-product-short-name} Quick Start maps each EC2 Instance type to a Tibero SGA size in megabytes (60% of available RAM in the EC2) and SHMMAX kernel (75% of available memory). This Quick Start provides default settings that you can see and revise in the Mappings section of the AWS CloudFormation template.
 
 [#architecture2]
-image::../images/Tibero-TSC-memory-configuration.png[Architecture]
+image::../docs/deployment_guide/images/Tibero-TSC-memory-configuration.png[Architecture]

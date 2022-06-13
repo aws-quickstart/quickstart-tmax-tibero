@@ -7,7 +7,7 @@ AWS Cloud.
 
 [#architecture1]
 .Quick Start architecture for {partner-product-short-name} TSC model on AWS
-image::../images/Tibero-TSC-architecture_diagram.png[Architecture]
+image::../docs/deployment_guide/images/Tibero-TSC-architecture_diagram.png[Architecture]
 
 As shown in <<architecture1>>, the Quick Start sets up an EC2 instance for the Tibero primary database in the first Availability Zone. And then, it sets up a second EC2 instance for a Tibero standby database in a second Availability Zone. In this process, it copies the primary database volumes to the second instance by using the DUPLICATE command with snapshot, and configures TSC. The primary database is a main database generally used by customers. A standby database is usually operated in Non-Active mode, receives redo log information on a regular basis from the primary database, and ensures it is in sync with the primary database. In a third availability zone, EC2 instance is set up for Tibero Observer process, which monitors TSC, detects abnormal termination of the primary database, and automatically promotes a standby database to the primary database (in Active Mode).  (The template that deploys the Quick Start into an existing VPC skips the tasks marked by asterisks.)  In addition, EventBridge and Lambda functions are provided to keep the status of the primary, standby, and observer instances.
 
