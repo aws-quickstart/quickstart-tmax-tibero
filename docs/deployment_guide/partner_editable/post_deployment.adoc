@@ -157,9 +157,3 @@ Bastion EC2 accesses either of the primary database, standby database, or Observ
 *   https://aws.amazon.com/marketplace/pp/prodview-sxyqek4rcmbzm?sr=0-2&ref_=beagle&applicationId=AWSMPContessa
 *   https://aws.amazon.com/marketplace/pp/prodview-qck3d4udqa2zm?sr=0-3&ref_=beagle&applicationId=AWSMPContessa
 
-==== Tibero support notes
-*   You can visit the following Technet website and leave an inquiry to get the answer from Tibero technical support engineers.
-https://technet.tmaxsoft.com/en/front/support/qna/findQnaList.do?cmProductCode=0301
-
-
-For troubleshooting common Quick Start issues, refer to the https://fwd.aws/rA69w?[AWS Quick Start General Information Guide^] and https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/troubleshooting.html[Troubleshooting CloudFormation^].
