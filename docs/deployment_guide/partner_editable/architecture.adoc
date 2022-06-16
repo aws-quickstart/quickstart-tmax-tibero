@@ -19,9 +19,6 @@ internet access for resources in the private subnets. Database Instances use thi
 to securely download OS packages required for Tibero installation.*
 * A Bastion Instance in the first and second public subnets to allow inbound
 SSH access to EC2 instances in public and private subnets.*
-* Four security groups for inbound access control from the internet, and among
-the DB Instances, Observer Instance and Bastion Instance.*
-* An IAM role and AWS CLI(Command Line Interface) to install the Tibero TSC(Tibero Standby Cluster).*
 * Two EBS volumes for storing your Data, one is for Primary Database and the other one is for Standby Database.*
 * AWS Lambda Function and Eventbridge for maintaining Tibero TSC mode, by automatically booting the dead primary DB
 in non-active mode(Standby mode) or the dead Observer process.*
