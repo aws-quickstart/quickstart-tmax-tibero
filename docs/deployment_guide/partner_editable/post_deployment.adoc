@@ -25,7 +25,7 @@ You can run cmrctl, a set of commands for managing and controlling resources in 
 
 [#architecture3]
 .Viewing Your DB Server Resources that CM manages
-image::../docs/deployment_guide/docs/deployment_guide/images/Tibero-DB-resource-CM.png[Architecture]
+image::../docs/deployment_guide/images/Tibero-DB-resource-CM.png[Architecture]
 
 You can check the usage of various Tibero CM commands by using the cmrctl help command.
 
@@ -93,40 +93,23 @@ image::../docs/deployment_guide/images/Tibero-AWS-EventBridge.png[Architecture]
 image::../docs/deployment_guide/images/Tibero-AWS-Lambda.png[Architecture]
 
 ==== Viewing Your Lambda Configuration
-You can check whether Lambda is currently in operation by using the crontab –l command. If the lambda_event.sh script file is listed in crontab as shown in Figure J, Lambda is operated.
+You can check whether Lambda is currently in operation by using the following command. If the "lambda_event.sh" script file is listed in crontab as shown in Figure 12, Lambda is operated.
 
-Figure J. Viewing Whether Lambda Is Operating or Not
-[#architecture4]
-.Viewing Various Function Commands of CM
+----
+$> crontab –l
+----
+
+[#architecture12]
+.Viewing Whether Lambda Is Operating or Not
 image::../docs/deployment_guide/images/Tibero-Lambda-operating.png[Architecture]
 
 ==== Changing Your Lambda Configuration
 You can turn off the Lambda function by using the lambdaoff command, and turn it on by using the lambdaon command.
 
-== Security
-
-When you deploy systems on the AWS Cloud, security responsibilities are shared between you and AWS. AWS operates, manages, and controls the components from the host operating system and virtualization layer down to the physical security of the facilities in which the services operate. In turn, you assume responsibility and management of the quest operating system, other associated application software such as Tibero Database and Observer, as well as the configuration of the AWS security group. For more information about security on AWS, visit the AWS Security Center.
-
-=== Network Security
-
-This Quick Start solution deploys Tibero Database EC2 and Observer EC2 in a private subnet and can be accessed in the following ways:
-
-*   Connect to the bastion EC2 by using an SSH terminal to access the AWS VPC.
 
 === OS Security
 
 To gain root access to EC2, you may use ec2-user or user-custom, and then sudo to root. You must keep the AWS EC2 PEM key you are using secure in your environment.
-
-=== Security Groups
-
-A security group acts as a firewall that controls the traffic for one or more instances. You can add rules to each security group that allow traffic to or from its associated instances.
-Tibero Quick Start creates the following four security groups.
-
-*   TiberoBastionSecurityGroup is applied to the bastion EC2, and allows an access from internet to VPC.
-*   PrimaryDBSecurityGroup is applied to the primary database EC2 and allows an access from bastion EC2 to SSH, and TCP communication from the standby database EC2 and Observer EC2.
-*   StandbyDBSecurityGroup is applied to standby database EC2, and allows an access from the bastion EC2 to SSH, and TCP communication from the primary database EC2 and Observer EC2.
-*   ObserverDBSecurityGroup is applied to Observer EC2, and allows an access from bastion EC2 to SSH, and TCP communication from the primary database EC2 and the standby database EC2
-Bastion EC2 accesses either of the primary database, standby database, or Observer via SSH. (Initially, the bastion EC2 does not have an AWS PEM key, and you must move your PEM key to the bastion EC2 by using SCP.)
 
 == Additional Resources
 
