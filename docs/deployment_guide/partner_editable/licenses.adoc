@@ -1,8 +1,20 @@
-// Include details about any licenses and how to sign up. Provide links as appropriate.
-There is no cost to use this Quick Start, but you will be billed for any AWS services or resources that this Quick Start deploys. For more information, refer to the https://fwd.aws/rA69w?[AWS Quick Start General Information Guide^]. The AWS CloudFormation templates for Quick Starts include configuration parameters that you can customize. Some of the settings, such as the instance type, affect the cost of deployment. For cost estimates, see the pricing pages for each AWS service you use. Prices are subject to change.
+There is no cost to use this Quick Start, but you will be billed for any AWS services or resources that this Quick Start deploys. For more information, refer to the https://fwd.aws/rA69w?[AWS Quick Start General Information Guide^].
 
 == Software licenses
 
-This deployment uses a Bring Your Own License (BYOL) model for {partner-product-short-name} Database Cloud Edition. You must already own licenses for {partner-product-short-name} Database Cloud Edition, and you must have access to {partner-company-name} Technet (https://technet.tmaxsoft.com/ko/front/main/main.do) to download the software.
+This deployment uses a Bring Your Own License (BYOL) model for {partner-product-short-name} Database Cloud Edition. To download the software, you must already own licenses for {partner-product-short-name} Database Cloud Edition, and you must have access to {partner-company-name} https://technet.tmaxsoft.com/ko/front/main/main.do[TechNet^].
+
+//TODO Troy, The above URL goes to a page in Korean. Is that where we want to send people?
 
 This Quick Start launches the Amazon Machine Image (AMI) for the Red Hat Enterprise Linux (RHEL) operating system.
+
+//TODO Troy, What do people need to know about the license for that RHEL AMI?
+
+You can find following Tibero offerings on AWS Marketplace:
+
+*   https://aws.amazon.com/marketplace/pp/prodview-bpnsx6y2wqyhq?sr=0-1&ref_=beagle&applicationId=AWSMPContessa[Tibero TAC (Tibero Active Cluster)^]
+*   https://aws.amazon.com/marketplace/pp/prodview-oqp2jrkq622mg?sr=0-4&ref_=beagle&applicationId=AWSMPContessa[Tibero 6 Enterprise Edition (CloudFormation)^]
+*   https://aws.amazon.com/marketplace/pp/prodview-sxyqek4rcmbzm?sr=0-2&ref_=beagle&applicationId=AWSMPContessa[Tibero 6 Standard Edition^]
+*   https://aws.amazon.com/marketplace/pp/prodview-qck3d4udqa2zm?sr=0-3&ref_=beagle&applicationId=AWSMPContessa[Tibero 6 Enterprise Edition^]
+
+//TODO Troy, What do people need to know about these Marketplace offerings? (I moved this list up here instead of at the end of the doc since this info seems relevant to licenses. Otherwise, why include the list at all?)

@@ -1,13 +1,3 @@
-//Include any predeployment steps here, such as signing up for a Marketplace AMI or making any changes to a partner account. If there are no predeployment steps, leave this file empty.
+//TODO Troy, I've deleted the "Predeployment steps" section. It was mostly background info that doesn't belong in the deployment guide. That kind of content is best maintained on the partner's own website, and we'd simply point to it. Otherwise, we could put it into an operational guide.
 
-== Predeployment steps
-
-=== Operating System for Deployment
-
-You can use Linux for {partner-product-short-name} Database installation on AWS. The Quick Start deployment uses Linux and supports Red Hat Enterprise Linux (RHEL) version 8.2.
-
-=== Tibero Memory Configuration
-{partner-product-short-name} Quick Start maps each EC2 Instance type to a Tibero SGA size in megabytes (60% of available RAM in the EC2) and SHMMAX kernel (75% of available memory). This Quick Start provides default settings that you can see and revise in the Mappings section of the AWS CloudFormation template.
-
-[#architecture2]
-image::../docs/deployment_guide/images/Tibero-TSC-memory-configuration.png[Architecture]
+//TODO Troy, If certain steps that I deleted are critical to do before we deploy, reinstate those steps only.

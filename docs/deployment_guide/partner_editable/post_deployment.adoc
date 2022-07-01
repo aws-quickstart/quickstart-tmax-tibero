@@ -1,142 +1,49 @@
-// Include any postdeployment steps here, such as steps necessary to test that the deployment was successful. If there are no postdeployment steps, leave this file empty.
+//TODO Troy, I've deleted the "Postdeployment steps" section. It was full of background info and user instructions that don't belong in the deployment guide. That kind of content is best maintained on the partner's own website, and we'd simply point to it. Otherwise, we could put it into an operational guide. (I'll archive that deleted content, along with a few preliminary edits, in our Documentation repo.)
 
-== Postdeployment steps
+//TODO Troy, If certain steps that I deleted are critical to successfully testing or completing the deployment, reinstate those steps only.
 
-=== Files and Directories
+== Resources
 
-Installation files are downloaded from your S3 bucket to the user’s home directory for each instance. When a stack is created for each instance, files used for the installation are deleted. If you want to configure with default values when a stack is created, Tibero home directory, and log and data files are placed as follows.
-/home/ec2-user/tibero6 for Tibero Database
-/home/ec2-user/database for Tibero log, control file, datafile
+=== AWS services
 
-=== Access your Tibero Database Instance
+[cols="1,2"]
+|===
+|AWS CloudFormation
+a|* https://aws.amazon.com/documentation/cloudformation/[AWS CloudFormation Documentation^]
+* https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-helper-scripts-reference.html[CloudFormation helper scripts reference^]
 
-Primary and standby databases, and observer instances are set up in a private subnet for security purpose. Access the bastion host in the public subnet, which includes inbound and outbound rule setting when a stack is created, if you want to access the instances from outside VPC. Therefore, access the bastion host with SSH (port 22) by using user name “ec2-user” and the PEM key you defined. The bastion host must forward the PEM key by using SCP to bastion EC2 to access other primary and standby databases and observer instances.
-Then, the bastion host accesses each instance by using SSH (port22) with the PEM key and user name “ec2-user.” (ex, ssh -i "PEM key" ec2-user@ec2-52-79-43-219.ap-northeast-2.compute.amazonaws.com)
+|Amazon Elastic Block Store (Amazon EBS)
+a|* https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AmazonEBS.html[Amazon EBS User Guide for Linux Instances^]
+* https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSVolumeTypes.html[Amazon EBS volume types^]
+* https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSOptimized.html[Amazon EBS–optimized instances^]
 
-== Best practices for using Tibero Database on AWS
+|AWS Command Line Interface (AWS CLI)
+a| https://docs.aws.amazon.com/cli/latest/userguide/installing.html#install-with-pip[AWS CLI User Guide for Version 2^]
 
-=== Working with Tibero CM (Cluster Manager)
+|Amazon EC2
+a| https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/[Amazon EC2 User Guide for Linux Instances^]
 
-Tibero CM is a process of managing the database resources, such as Tibero and 7Network, and you can manage various resources by using Tibero CM after setting up Tibero Quick Start.
+|Amazon Route 53
+a| https://aws.amazon.com/documentation/route53/[Amazon Route 53 Documentation^]
 
-==== Viewing Your CM Configuration
+|Amazon S3
+a| https://aws.amazon.com/documentation/s3/[Amazon Simple Storage Service Documentation^]
 
-You can run cmrctl, a set of commands for managing and controlling resources in Tibero CM, to use various functions. After setting up Tibero Quick Start, access the primary database or standby database EC2, and apply primary_env.profile or standby_env.profile by using the source command. And then, you can check the status of resources currently managed by CM.
+|Amazon VPC
+a| https://aws.amazon.com/documentation/vpc/[Amazon Virtual Private Cloud Documentation^]
 
-[#architecture3]
-.Viewing Your DB Server Resources that CM manages
-image::../docs/deployment_guide/images/Tibero-DB-resource-CM.png[Architecture]
+|===
 
-You can check the usage of various Tibero CM commands by using the cmrctl help command.
+=== Red Hat Enterprise Linux
 
-[#architecture4]
-.Viewing Various Function Commands of CM
-image::../docs/deployment_guide/images/Tibero-Various-function-command-CM.png[Architecture]
+The Quick Start deployment supports Red Hat Enterprise Linux (RHEL) version 8.2.
 
-=== Working with Tibero Observer
+//TODO Troy, What resources should we point to here?
 
-Tibero Observer is a process that manages Tibero Standby Cluster (TSC). If the primary database is abnormally shut down, Tibero Observer automatically boots a standby database in Active mode. After setting up Tibero Quick Start, you can change TSC configuration or switch over to a standby database by using Tibero Observer
+=== Tibero
 
-==== Viewing Your Observer Configuration
+https://technet.tmaxsoft.com/ko/front/download/findDownloadList.do?cmProductCode=0301[Tibero Database Installation Guide^]
 
-You can check the status of TSC by running cmrctl, which is a set of commands for managing Tibero Observer. After setting up Tibero Quick Start, access Observer EC2 and apply observer_env.profile by using the source command. And then, you can check the status of Tibero Cluster managed by Observer by running the cmrctl show command.
+//TODO Troy, This link opens a page in Korean, and it doesn't appear to be an installation guide. What URL should we point to instead?
 
-[#architecture5]
-.Viewing Tibero Clusters that Observer manages
-image::../docs/deployment_guide/images/Tibero-Clusters-Observermanager.png[Architecture]
-
-You can check the usage of various Tibero Observer commands by using the cmrctl help command.
-
-[#architecture6]
-.Viewing Various Function Commands of Observer
-image::../docs/deployment_guide/images/Tibero-Various-function-command-Observer.png[Architecture]
-
-
-==== Changing Your Observer Configuration
-You can check TSC fail-over mode and TSN information by running the cmrctl show --tscid [tscid] command. In this Quick Start, the default value of tscid is 123.
-
-[#architecture7]
-.Viewing TSC Information
-image::../docs/deployment_guide/images/Tibero-TSC-Information.png[Architecture]
-
-TSC fail-over mode can be either DISASTER_PLAN or PROTECTIVE mode. The DISASTER_PLAN mode enables failover of a standby database in Active mode, if either or both of the primary server CM and database are shut down. The PROTECTIVE mode enables failover when the primary database is shut down, but does not proceed with failover when CM is shut down, which is different from the DISASTER_PLAN mode.
-In this Quick Start, the default mode of TSC fail-over is DISASTER_PLAN.
-
-[#architecture8]
-.Changing TSC Fail-over Mode
-image::../docs/deployment_guide/images/Tibero-TSC--Failover-mode.png[Architecture]
-
-As shown in Figure F, you can change TSC failover mode by executing cmrctl set --tscid [tscid] --mode [disaster_plan] or [protective], and check the changed mode by executing cmrctl show --tscid [tscid]
-
-==== Switching to the Standby Database
-
-You can switch from the primary database to a standby database by executing cmrctl switchover --tscid [tscid].
-
-[#architecture9]
-.Switching Primary DB and Standby DB
-image::../docs/deployment_guide/images/Tibero-SwitchingDB(P,S).png[Architecture]
-
-=== Working with AWS Eventbridge and Lambda
-
-The Tibero Quick Start has AWS Eventbridge and Lambda functions for high availability of the database. When the primary database is shut down in an on-premise environment, Tibero Observer automatically promotes a standby database to the primary database (Active mode), but it does not reboot the previous primary database as a standby database. Therefore, a customer or DBA has to reboot the failed original primary database as a standby database. In this Quick Start, however, the shutdown original primary database can be automatically rebooted as a standby database (Recovery mode) by using AWS Eventbridge and Lambda. In addition, even after an observer process is shut down, it is automatically rebooted by the Lambda function. To sum up, AWS Eventbridge and Lambda provide the following functions in the Tibero Quick Start.
-- Automatically reboot the original primary database as a standby database (Recovery mode).
-- Automatically reboot Observer when it is shut down.
-
-When the Quick Start is completely set up, you can check that EventBus and Lambda have been created in the AWS console screen as shown in Figure H and I.
-
-[#architecture10]
-.Viewing EventBus of AWS EventBridge
-image::../docs/deployment_guide/images/Tibero-AWS-EventBridge.png[Architecture]
-
-[#architecture11]
-.Viewing Function of AWS Lambda
-image::../docs/deployment_guide/images/Tibero-AWS-Lambda.png[Architecture]
-
-==== Viewing Your Lambda Configuration
-You can check whether Lambda is currently in operation by using the following command. If the "lambda_event.sh" script file is listed in crontab as shown in Figure 12, Lambda is operated.
-
-----
-$> crontab –l
-----
-
-[#architecture12]
-.Viewing Whether Lambda Is Operating or Not
-image::../docs/deployment_guide/images/Tibero-Lambda-operating.png[Architecture]
-
-==== Changing Your Lambda Configuration
-You can turn off the Lambda function by using the lambdaoff command, and turn it on by using the lambdaon command.
-
-
-=== OS Security
-
-To gain root access to EC2, you may use ec2-user or user-custom, and then sudo to root. You must keep the AWS EC2 PEM key you are using secure in your environment.
-
-== Additional Resources
-
-=== AWS Services
-==== AWS CloudFormation
-*   Documentation: https://aws.amazon.com/documentation/cloudformation/
-*   Helper scripts: https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-helper-scripts-reference.html
-
-==== Amazon EBS
-*   User guide: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AmazonEBS.html
-*   Volumetypes: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSVolumeTypes.html
-*   Optimizedinstances: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSOptimized.html
-*   AWS Command Line Interface installation on Linux https://docs.aws.amazon.com/cli/latest/userguide/installing.html#install-with-pip
-*   Amazon EC2 user guide for Linux https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/
-*   Amazon Route 53 https://aws.amazon.com/documentation/route53/
-*   Amazon S3 https://aws.amazon.com/documentation/s3/
-*   Amazon VPC https://aws.amazon.com/documentation/vpc/
-
-=== Red Hat Enterprise Linux documentation
-
-=== Tibero Database documentation
-
-*   Tibero Database Installation Guide: https://technet.tmaxsoft.com/ko/front/download/findDownloadList.do?cmProductCode=0301
-
-==== Tibero on AWS
-*   https://aws.amazon.com/marketplace/pp/prodview-bpnsx6y2wqyhq?sr=0-1&ref_=beagle&applicationId=AWSMPContessa
-*   https://aws.amazon.com/marketplace/pp/prodview-oqp2jrkq622mg?sr=0-4&ref_=beagle&applicationId=AWSMPContessa
-*   https://aws.amazon.com/marketplace/pp/prodview-sxyqek4rcmbzm?sr=0-2&ref_=beagle&applicationId=AWSMPContessa
-*   https://aws.amazon.com/marketplace/pp/prodview-qck3d4udqa2zm?sr=0-3&ref_=beagle&applicationId=AWSMPContessa
-
+//TODO Troy, What other Tibero resources are available to support people after they've deployed this Quick Start?

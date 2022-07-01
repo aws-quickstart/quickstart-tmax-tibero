@@ -2,12 +2,12 @@
 :quickstart-github-org: aws-quickstart
 :partner-product-name: Tmax Tibero
 :partner-product-short-name: Tibero
-:partner-company-name: Tmax
-:doc-month: June
+:partner-company-name: TmaxSoft
+:doc-month: July
 :doc-year: 2022
-:partner-contributors: Sungyong Cho, Dongkeun Choi, Eugene Sim  {partner-company-name}
+:partner-contributors: Sungyong Cho, Dongkeun Choi, and Eugene Sim, {partner-company-name}
 // :other-contributors: Akua Mansa, Trek10
-:aws-contributors: Battulga Purevragchaa, AWS WMP team
+:aws-contributors: Battulga Purevragchaa, AWS Workload Migration Program
 :aws-ia-contributors: Troy Ameigh, AWS Integration & Automation team
 :deployment_time: 60 minutes
 :default_deployment_region: us-east-1

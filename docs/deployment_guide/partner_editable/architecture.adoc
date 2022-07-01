@@ -3,23 +3,28 @@
 Deploying this Quick Start with default parameters builds the following {partner-product-short-name} environment in the
 AWS Cloud.
 
-// Replace this example diagram with your own. Follow our wiki guidelines: https://w.amazon.com/bin/view/AWS_Quick_Starts/Process_for_PSAs/#HPrepareyourarchitecturediagram. Upload your source PowerPoint file to the GitHub {deployment name}/docs/images/ directory in its repository.
-
 [#architecture1]
-.Quick Start architecture for {partner-product-short-name} TSC model on AWS
+.Quick Start architecture for {partner-product-short-name} on AWS
 image::../docs/deployment_guide/images/Tibero-TSC-architecture_diagram.png[Architecture]
 
-As shown in <<architecture1>>, the Quick Start sets up an EC2 instance for the Tibero primary database in the first Availability Zone. And then, it sets up a second EC2 instance for a Tibero standby database in a second Availability Zone.
+As shown in <<architecture1>>, the Quick Start sets up the following:
 
-* A High Available Architecture that spans three Availability Zones.
-* A VPC configured with public and private subnets in order to provide you with your own virtual network on AWS Cloud.
-* An Internet gateway used by the bastion hosts in order to allow access to the internet.
-* A Nat gateway used by EC2 Instances in the private subnets in order to allow outbound internet access for resources in the private subnets. Database Instances use this gateway to securely download OS packages required for Tibero installation.
-* A Bastion Instance within an Auto Scaling Group in the first and second public subnets to allow inbound SSH access to EC2 instances in public and private subnets.
-* Two EC2 instance across two Availability Zones that house the primary and standby databases.
-* Two EBS volumes attached to the two EC2 instances, for storing your Data, one is for Primary Database and the other one is for Standby Database.
-* One EC2 instance in the third Availability Zone, that operates the Observer Tibero instance.
-* AWS Lambda Function and Eventbridge for maintaining Tibero TSC mode, by automatically booting the dead primary DB in non-active mode(Standby mode) or the dead Observer process.
-* A S3 bucket that stores the Installation files using during the deployment.
+* A highly available architecture that spans three Availability Zones.
+* A virtual private cloud (VPC) configured with public and private subnets, according to AWS best practices, to provide you with your own virtual network on AWS.*
+
+* In the public subnets:
+** Managed network address translation (NAT) gateways to allow outbound internet access for resources in the private subnets. Database instances use the NAT gateways to securely download the operating-system packages required to install Tibero.*
+** A Linux bastion host in an Auto Scaling group to allow inbound SSH (Secure Shell) access to Amazon Elastic Compute Cloud (Amazon EC2) instances in public and private subnets.*
+
+* In the private subnets:
+** A Tibero Standby Cluster (TSC), which comprises two EC2 instances in the first two Availability Zones. Each EC2 instance is attached to an Amazon Elastic Block Store (Amazon EBS) volume. These volumes house your primary and standby databases.
+** An EC2 instance in the third Availability Zone—the Tibero observer instance—to detect failure in the primary database.
+
+* Amazon EventBridge and AWS Lambda to maintain TSC mode by automatically booting the dead primary database in nonactive mode (standby mode) or the dead observer process.
+* An Amazon Simple Storage Service (Amazon S3) bucket that stores the installation files that are used when you deploy the Quick Start.
 
 [.small]#* The template that deploys this Quick Start into an existing VPC skips the components marked by asterisks and prompts you for your existing VPC configuration.#
+
+//TODO Troy, Did I put the asterisks on the right bullets (to go with the footnote)?
+
+//TODO Troy, Please rephrase to avoid "dead."
