@@ -34,16 +34,11 @@ a| https://aws.amazon.com/documentation/vpc/[Amazon Virtual Private Cloud Docume
 
 |===
 
-=== Red Hat Enterprise Linux
-
-The Quick Start deployment supports Red Hat Enterprise Linux (RHEL) version 8.2.
-
-//TODO Troy, What resources should we point to here?
 
 === Tibero
 
-https://technet.tmaxsoft.com/ko/front/download/findDownloadList.do?cmProductCode=0301[Tibero Database Installation Guide^]
+https://technet.tmaxsoft.com/en/front/download/findDownloadList.do?cmProductCode=0301[Tibero Database Installation Guide^]
 
-//TODO Troy, This link opens a page in Korean, and it doesn't appear to be an installation guide. What URL should we point to instead?
+//TODO Troy, This link opens a page in Korean, and it doesn't appear to be an installation guide. What URL should we point to instead? - Fixed for English
 
-//TODO Troy, What other Tibero resources are available to support people after they've deployed this Quick Start?
+//TODO Troy, What other Tibero resources are available to support people after they've deployed this Quick Start? none
