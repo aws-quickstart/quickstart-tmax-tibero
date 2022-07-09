@@ -20,11 +20,7 @@ As shown in <<architecture1>>, the Quick Start sets up the following:
 ** A Tibero Standby Cluster (TSC), which comprises two EC2 instances in the first two Availability Zones. Each EC2 instance is attached to an Amazon Elastic Block Store (Amazon EBS) volume. These volumes house your primary and standby databases.
 ** An EC2 instance in the third Availability Zone—the Tibero observer instance—to detect failure in the primary database.
 
-* Amazon EventBridge and AWS Lambda to maintain TSC mode by automatically booting the failed primary database in nonactive mode (standby mode) or the dead observer process.
+* Amazon EventBridge and AWS Lambda to maintain TSC mode by automatically booting the failed primary database in nonactive mode (standby mode) or the failed observer process.
 * An Amazon Simple Storage Service (Amazon S3) bucket that stores the installation files that are used when you deploy the Quick Start.
 
 [.small]#* The template that deploys this Quick Start into an existing VPC skips the components marked by asterisks and prompts you for your existing VPC configuration.#
-
-//TODO Troy, Did I put the asterisks on the right bullets (to go with the footnote)? YES
-
-//TODO Troy, Please rephrase to avoid "dead." Fixed

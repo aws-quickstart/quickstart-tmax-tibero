@@ -1,3 +1,0 @@
-//TODO Troy, I've deleted the "Predeployment steps" section. It was mostly background info that doesn't belong in the deployment guide. That kind of content is best maintained on the partner's own website, and we'd simply point to it. Otherwise, we could put it into an operational guide.
-
-//TODO Troy, If certain steps that I deleted are critical to do before we deploy, reinstate those steps only.

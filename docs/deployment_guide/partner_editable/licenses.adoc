@@ -4,17 +4,11 @@ There is no cost to use this Quick Start, but you will be billed for any AWS ser
 
 This deployment uses a Bring Your Own License (BYOL) model for {partner-product-short-name} Database Cloud Edition. To download the software, you must already own licenses for {partner-product-short-name} Database Cloud Edition, and you must have access to {partner-company-name} https://technet.tmaxsoft.com/en/front/main/main.do[TechNet^].
 
-//TODO Troy, The above URL goes to a page in Korean. Is that where we want to send people? Fixed moved to english
+This Quick Start launches the Amazon Machine Image (AMI) for the Red Hat Enterprise Linux (RHEL) operating system. For details, refer to https://aws.amazon.com/partners/redhat/rhel-pricing/[Red Hat Enterprise Linux on AWS Pricing^].
 
-This Quick Start launches the Amazon Machine Image (AMI) for the Red Hat Enterprise Linux (RHEL) operating system. You can see Red Hat Enterprise Linux on AWS Pricing at the following https://aws.amazon.com/partners/redhat/rhel-pricing/[link^].
+You can find following Tibero offerings in AWS Marketplace:
 
-//TODO Troy, What do people need to know about the license for that RHEL AMI? Added in a link for pricing
-
-You can find following Tibero offerings on AWS Marketplace:
-
-*   https://aws.amazon.com/marketplace/pp/prodview-bpnsx6y2wqyhq?sr=0-1&ref_=beagle&applicationId=AWSMPContessa[Tibero TAC (Tibero Active Cluster)^] - guarantees reliable and seamless service even in various types of failure situations with shared disk-based.
-*   https://aws.amazon.com/marketplace/pp/prodview-oqp2jrkq622mg?sr=0-4&ref_=beagle&applicationId=AWSMPContessa[Tibero 6 Enterprise Edition (CloudFormation)^] - Tibero 6 is a high-performance, highly secure, highly scalable relational database management system (RDBMS) for enterprises that want to fully leverage their mission-critical data.
-*   https://aws.amazon.com/marketplace/pp/prodview-sxyqek4rcmbzm?sr=0-2&ref_=beagle&applicationId=AWSMPContessa[Tibero 6 Standard Edition^] - Tibero 6 is a high-performance, highly secure, highly scalable relational database management system (RDBMS) for enterprises that want to fully leverage their mission-critical data. Free trial is available.
-*   https://aws.amazon.com/marketplace/pp/prodview-qck3d4udqa2zm?sr=0-3&ref_=beagle&applicationId=AWSMPContessa[Tibero 6 Enterprise Edition^] - Tibero 6 is a high-performance, highly secure, highly scalable relational database management system (RDBMS) for enterprises that want to fully leverage their mission-critical data. Free trial is available.
-
-//TODO Troy, What do people need to know about these Marketplace offerings? (I moved this list up here instead of at the end of the doc since this info seems relevant to licenses. Otherwise, why include the list at all?) - I added some text
+*   https://aws.amazon.com/marketplace/pp/prodview-bpnsx6y2wqyhq?sr=0-1&ref_=beagle&applicationId=AWSMPContessa[Tibero TAC (Tibero Active Cluster)^], which offers reliable, seamless service even in failure situations.
+*   https://aws.amazon.com/marketplace/pp/prodview-oqp2jrkq622mg?sr=0-4&ref_=beagle&applicationId=AWSMPContessa[Tibero 6 Enterprise Edition (CloudFormation)^]. Tibero 6 is a high-performance, highly secure, highly scalable relational database management system (RDBMS).
+*   https://aws.amazon.com/marketplace/pp/prodview-sxyqek4rcmbzm?sr=0-2&ref_=beagle&applicationId=AWSMPContessa[Tibero 6 Standard Edition^], which offers a free trial.
+*   https://aws.amazon.com/marketplace/pp/prodview-qck3d4udqa2zm?sr=0-3&ref_=beagle&applicationId=AWSMPContessa[Tibero 6 Enterprise Edition^], which offers a free trial.
