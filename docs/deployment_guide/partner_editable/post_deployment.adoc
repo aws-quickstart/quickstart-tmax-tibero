@@ -1,7 +1,3 @@
-//TODO Troy, I've deleted the "Postdeployment steps" section. It was full of background info and user instructions that don't belong in the deployment guide. That kind of content is best maintained on the partner's own website, and we'd simply point to it. Otherwise, we could put it into an operational guide. (I'll archive that deleted content, along with a few preliminary edits, in our Documentation repo.)
-
-//TODO Troy, If certain steps that I deleted are critical to successfully testing or completing the deployment, reinstate those steps only.
-
 == Resources
 
 === AWS services
@@ -38,7 +34,3 @@ a| https://aws.amazon.com/documentation/vpc/[Amazon Virtual Private Cloud Docume
 === Tibero
 
 https://technet.tmaxsoft.com/en/front/download/findDownloadList.do?cmProductCode=0301[Tibero Database Installation Guide^]
-
-//TODO Troy, This link opens a page in Korean, and it doesn't appear to be an installation guide. What URL should we point to instead? - Fixed for English
-
-//TODO Troy, What other Tibero resources are available to support people after they've deployed this Quick Start? none

@@ -1,7 +1,1 @@
-This Quick Start deploys {partner-product-name} on the AWS Cloud. This guide covers the steps necessary to deploy this Quick Start. For more information, see the http://www.tmaxsoft.com/products/tibero/[Tibero product page^].
-
-//TODO Troy, In the deployment guide, this "Overview" section will have just the sentences above. Below, commented out, is what we'll put on the landing page. Any edits needed to these paragraphs? Think it is good.
-
-//This Quick Start deploys a http://www.tmaxsoft.com/products/tibero/[Tibero^] relational database to the Amazon Web Services (AWS) Cloud. With this architecture, database administrators, enterprise architects, system administrators, and developers can run Tibero in a highly available Amazon Elastic Compute Cloud (Amazon EC2) environment using Tibero Standby Cluster (TSC). If the primary EC2 instance fails, it fails over to a standby instance.
-
-//The Quick Start deployment supports Red Hat Enterprise Linux (RHEL) version 8.2.
+This Quick Start deploys {partner-product-name} on the AWS Cloud. This guide covers the steps necessary to deploy this Quick Start. For more information, refer to the http://www.tmaxsoft.com/products/tibero/[Tibero product page^].
