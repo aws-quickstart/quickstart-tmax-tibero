@@ -142,7 +142,7 @@ Metadata:
       PublicSubnetTag1:
         default: Public subnet tag 1
       PrivateSubnetTag1:
-        default: Public subnet tag 1
+        default: Private subnet tag 1
       VPCTenancy:
         default: VPC tenancy
       PrimaryIPAddress:
