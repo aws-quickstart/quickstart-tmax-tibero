@@ -103,89 +103,89 @@ Metadata:
       StandbyClusterManagerSID:
         default: Standby Tibero Cluster Manager security identifier
       ClusterManagerPort:
-        default: Tibero Cluster Manager Port Number
+        default: Tibero Cluster Manager port number
       ClusterManagerLocalPort:
-        default: Tibero Cluster Manager Local Port Number
+        default: Tibero Cluster Manager local port number
       ObserverSID:
         default: Tibero Observer security identifier
       ObserverPort:
-        default: Observer Port Number
+        default: Observer port number
       RemoteAccessCIDR:
-        default: Allowed Bastion External Access CIDR
+        default: Allowed bastion external access CIDR
       VPCID:
         default: VPC ID
       PrivateSubnet1ID:
-        default: Private Subnet 1 CIDR
+        default: Private subnet 1 CIDR
       PublicSubnet2ID:
-        default: Public Subnet 2 CIDR
+        default: Public subnet 2 CIDR
       PrivateSubnet2ID:
-        default: Private Subnet 2 CIDR
+        default: Private subnet 2 CIDR
       PrivateSubnet3ID:
-        default: Private Subnet 3 CIDR
+        default: Private subnet 3 CIDR
       PrimaryIPAddress:
-        default: Primary Database Private IP
+        default: Primary database private IP address
       StandbyIPAddress:
-        default: Standby Database Private IP
+        default: Standby database private IP address
       ObserverIPAddress:
-        default: Observer Private IP
+        default: Observer private IP address
       BastionAMIOS:
-        default: Bastion Operating System
+        default: Bastion operating system
       BastionInstanceType:
-        default: Bastion Instance Type
+        default: Bastion instance type
       NumBastionHosts:
-        default: Number of Bastion Hosts
+        default: Number of bastion hosts
       TiberoAMIOS:
-        default: Database Operating System
+        default: Database operating system
       PrimaryDBInstanceType:
-        default: Primary Database Instance Type
+        default: Primary database instance type
       StandbyDBInstanceType:
-        default: Standby Database Instance Type
+        default: Standby database instance type
       ObserverInstanceType:
-        default: Observer Instance Type
+        default: Observer instance type
       PrimaryEBSVolumeType:
-        default: Primary EBS Volume Type
+        default: Primary EBS volume type
       PrimaryEBSVolumeSize:
-        default: Primary EBS Volume Size(GiB)
+        default: Primary EBS volume size
       PrimaryEBSVolumeIOPS:
-        default: Primary EBS Volume IOPS
+        default: Primary EBS volume IOPS
       StandbyEBSVolumeType:
-        default: Standby EBS Volume Type
+        default: Standby EBS volume type
       StandbyEBSVolumeIOPS:
-        default: Standby EBS Volume IOPS
+        default: Standby EBS volume IOPS
       SystemDatafileSize:
-        default: System Datafile Size
+        default: System datafile size
       SyssubDatafileSize:
-        default: SYSSUB Datafile Size
+        default: SYSSUB datafile size
       UserTablespaceDatafileSize:
-        default: User Tablespace Datafile Size
+        default: User tablespace datafile size
       TemporaryTablespaceDatafileSize:
-        default: Temporary Tablespace Datafile Size
+        default: Temporary tablespace datafile size
       UndoTablespaceDatafileSize:
-        default: Undo Tablespace Datafile Size
+        default: Undo tablespace datafile size
       RedoLogfileSize:
-        default: Redo Log file Size
+        default: Redo log file Size
       RedoLogGroup:
-        default: Redo Log Group
+        default: Redo log group
       RedoLogDuplicate:
-        default: Redo Log Duplicate
+        default: Redo log duplicate
       QSS3BucketName:
-        default: Tmax Quick Start S3 Bucket Name
+        default: Quick Start S3 bucket name
       QSS3KeyPrefix:
-        default: Tmax Quick Start S3 Key Prefix
+        default: Quick Start S3 key prefix
       #QSS3BucketRegion:
-       # default: Tmax Quick Start S3 Bucket Region
+       # default: Quick Start S3 bucket Region
       EventBusName:
-        default: EventBus Name
+        default: EventBus name
 
 
 Parameters:
   KeyPairName:
-    Description: Name of an existing EC2 Keypair to enable SSH access to the Instance
+    Description: Name of an existing EC2 key pair to enable SSH access to the instance.
     ConstraintDescription: Must be the name of an existing EC2 key pair.
     Type: AWS::EC2::KeyPair::KeyName
 
   CharacterSet:
-    Description: Character set for Tibero database
+    Description: Character set for the Tibero database.
     Type: String
     Default: MSWIN949
     AllowedValues:
@@ -279,7 +279,7 @@ Parameters:
     MaxValue: 65535
 
   TiberoSID:
-    Description: Tibero security identifier
+    Description: Tibero security identifier.
     Type: String
     Default: tibero
 
@@ -312,13 +312,13 @@ Parameters:
     MaxValue: 65535
 
   ObserverSID:
-    Description: Tibero Observer security identifier
+    Description: Tibero Observer security identifier.
     Type: String
     Default: obs
 
   ObserverPort:
     Description: Observer port number (1024–65535).
-    ConstraintDescription: Avoid numbers of database port, database local port, database standby log port, Cluster Manager port, and Cluster Manager local port (1024–65535).
+    ConstraintDescription: Avoid numbers of database port, database local port, database standby log port, cluster manager port, and cluster manager local port (1024–65535).
     Type: Number
     Default: 9600
     MinValue: 1024
