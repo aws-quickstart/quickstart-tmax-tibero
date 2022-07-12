@@ -92,7 +92,7 @@ Metadata:
       CharacterSet:
         default: Character set
       TiberoBinaryName:
-        default: Tibero home directory
+        default: Tibero binary name
       DatabaseName:
         default: Database name
       DatabaseDirectoryName:
@@ -139,6 +139,12 @@ Metadata:
         default: Public subnet 3 CIDR
       PrivateSubnet3CIDR:
         default: Private subnet 3 CIDR
+      PublicSubnetTag1:
+        default: Public subnet tag 1
+      PrivateSubnetTag1:
+        default: Public subnet tag 1
+      VPCTenancy:
+        default: VPC tenancy
       PrimaryIPAddress:
         default: Primary database private IP address
       StandbyIPAddress:
@@ -193,6 +199,8 @@ Metadata:
         default: Quick Start S3 bucket Region
       EventBusName:
         default: EventBus name
+      NumberOfAZs:
+        default: Number of Availability Zones
 
 
 Parameters:
@@ -242,12 +250,12 @@ Parameters:
       - ZHT32EUC
 
   TiberoBinaryName:
-    Description: Your Tibero binary name
+    Description: Tibero binary name.
     Type: String
     Default: tibero6
 
   DatabaseName:
-    Description: Your database name
+    Description: Database name.
     ConstraintDescription: No special characters, 3–8 characters.
     Type: String
     Default: Tibero
@@ -259,7 +267,7 @@ Parameters:
     Default: database
 
   DatabaseUserID:
-    Description: Database user ID
+    Description: Database user ID.
     ConstraintDescription: No special characters, 3–10 characters.
     Type: String
     AllowedPattern: ([A-Za-z0-9-]{3,10})
@@ -272,7 +280,7 @@ Parameters:
     AllowedPattern: ([A-Za-z0-9_#$]{3,20})
 
   DatabasePort:
-    Description: Tibero database listener port number(1024–65535).
+    Description: Tibero database listener port number (1024–65535).
     ConstraintDescription: Avoid numbers of database local port, database standby log port, cluster manager port, cluster manager local port, and observer port (1024–65535).
     Type: Number
     Default: 9400
@@ -296,18 +304,18 @@ Parameters:
     MaxValue: 65535
 
   TiberoSID:
-    Description: Tibero security identifier
+    Description: Tibero security identifier.
     Type: String
     Default: tibero
 
   PrimaryClusterManagerSID:
-    Description: Primary Tibero Cluster Manager security identifier
+    Description: Primary Tibero Cluster Manager security identifier.
     ConstraintDescription: Set to a different ID than StandbyClusterManagerSID.
     Type: String
     Default: cmp
 
   StandbyClusterManagerSID:
-    Description: Standby Tibero Cluster Manager security identifier
+    Description: Standby Tibero Cluster Manager security identifier.
     ConstraintDescription: Set to a different ID than PrimaryClusterManagerSID.
     Type: String
     Default: cms
@@ -329,7 +337,7 @@ Parameters:
     MaxValue: 65535
 
   ObserverSID:
-    Description: Tibero Observer security identifier
+    Description: Tibero Observer security identifier.
     Type: String
     Default: obs
 
@@ -397,7 +405,7 @@ Parameters:
     ConstraintDescription:
       Tags must be in format "Key=Value" keys can only contain [a-zA-Z0-9+\-._:/@], values can contain [a-zA-Z0-9+\-._:/@ *\\"'\[\]\{\}]
     Default: Network=Public
-    Description: Tag to add to public subnets, in format Key=Value (optional).
+    Description: (Optional) Tag to add to public subnets, in format Key=Value.
     Type: String
 
   PrivateSubnet1CIDR:
@@ -423,7 +431,7 @@ Parameters:
     ConstraintDescription:
       tags must be in format "Key=Value" keys can only contain [a-zA-Z0-9+\-._:/@], values can contain [a-zA-Z0-9+\-._:/@ *\\"'\[\]\{\}]
     Default: Network=Private
-    Description: Tag to add to private subnets, in format Key=Value (optional).
+    Description: (Optional) Tag to add to private subnets, in format Key=Value.
     Type: String
 
   PrimaryIPAddress:
@@ -477,7 +485,7 @@ Parameters:
       - 2
 
   TiberoAMIOS:
-    Description: Operating System and version for database nodes.
+    Description: Operating system and version for database nodes.
     Type: String
     Default: Red-Hat-Enterprise-Linux-8-HVM
     AllowedValues:
@@ -518,7 +526,7 @@ Parameters:
       - r5.24xlarge
 
   StandbyDBInstanceType:
-    Description: Amazon EC2 instance type for the Tibero Standby DB host.
+    Description: Amazon EC2 instance type for the Tibero standby DB host.
     Type: String
     Default: t3.xlarge
     AllowedValues:
@@ -663,7 +671,7 @@ Parameters:
     MinValue: '3'
 
   RedoLogDuplicate:
-    Description: Redo log duplicate
+    Description: Redo log duplicate.
     Type: String
     Default: N
     AllowedValues:
