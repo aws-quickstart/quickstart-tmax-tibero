@@ -1,0 +1,1 @@
+This Quick Start deploys {partner-product-name} on the AWS Cloud. This guide covers the steps necessary to deploy this Quick Start. For more information, refer to the http://www.tmaxsoft.com/products/tibero/[Tibero product page^].
